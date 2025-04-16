@@ -4,6 +4,7 @@ export const routes = Object.fromEntries([
   ["/", { loader: () => import(/* webpackChunkName: "index.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/index.html.js"), meta: {"title":"Hello, SSM!"} }],
   ["/post/01_Java_reflect.html", { loader: () => import(/* webpackChunkName: "post_01_Java_reflect.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/01_Java_reflect.html.js"), meta: {"title":"Java反射技术"} }],
   ["/post/02_Dynamic_proxy.html", { loader: () => import(/* webpackChunkName: "post_02_Dynamic_proxy.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/02_Dynamic_proxy.html.js"), meta: {"title":"动态代理模式"} }],
+  ["/post/03_Design_pattern.html", { loader: () => import(/* webpackChunkName: "post_03_Design_pattern.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/03_Design_pattern.html.js"), meta: {"title":"设计模式简介"} }],
   ["/404.html", { loader: () => import(/* webpackChunkName: "404.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/404.html.js"), meta: {"title":""} }],
 ]);
 

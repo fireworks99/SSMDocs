@@ -9,6 +9,7 @@ import * as clientConfig7 from 'C:/Users/Administrator/Documents/Web_FE/VuePress
 import * as clientConfig8 from 'C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/markdown-tab/config.js'
 import * as clientConfig9 from 'C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/node_modules/.pnpm/@vuepress+plugin-theme-data@2.0.0-rc.86_vuepress@2.0.0-rc.20_@vuepress+bundler-vite@2.0.0-rc._3xs7kl3aj3me6gllzackrulley/node_modules/@vuepress/plugin-theme-data/lib/client/config.js'
 import * as clientConfig10 from 'C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/node_modules/.pnpm/@vuepress+theme-default@2.0.0-rc.88_markdown-it@14.1.0_sass-embedded@1.86.3_vuepress@2.0.0-rc_gi6cdfrp5ui5rprokymjilh73i/node_modules/@vuepress/theme-default/lib/client/config.js'
+import * as clientConfig11 from 'C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/node_modules/.pnpm/@vuepress+plugin-search@2.0.0-rc.94_vuepress@2.0.0-rc.20_@vuepress+bundler-vite@2.0.0-rc.20_@_ipyqbkwinjat2qdm7nipfwvn5e/node_modules/@vuepress/plugin-search/lib/client/config.js'
 
 export const clientConfigs = [
   clientConfig0,
@@ -22,4 +23,5 @@ export const clientConfigs = [
   clientConfig8,
   clientConfig9,
   clientConfig10,
+  clientConfig11,
 ].map((m) => m.default).filter(Boolean)

@@ -1,5 +1,29 @@
 <template><div><h1 id="java反射技术" tabindex="-1"><a class="header-anchor" href="#java反射技术"><span>Java反射技术</span></a></h1>
 <nav class="table-of-contents"><ul><li><router-link to="#_1-生成对象-无参构造">1.生成对象（无参构造）</router-link></li><li><router-link to="#_2-生成对象-带参构造">2.生成对象（带参构造）</router-link></li><li><router-link to="#_3-调度方法">3.调度方法</router-link></li><li><router-link to="#_4-生成对象并调度方法">4.生成对象并调度方法</router-link></li><li><router-link to="#_5-整体代码">5.整体代码</router-link><ul><li><router-link to="#_1-reflectserviceimpl">(1)ReflectServiceImpl</router-link></li><li><router-link to="#_2-reflectserviceimpl2">(2).ReflectServiceImpl2</router-link></li><li><router-link to="#_3-main">(3).Main</router-link></li></ul></li></ul></nav>
+<blockquote>
+<p><strong>反射</strong>的核心思想之一就是允许程序在<strong>运行时</strong>动态地获取类的信息并操作类的成员，即使你对类的具体实现细节不了解。</p>
+</blockquote>
+<p>应用场景：</p>
+<ol>
+<li><strong>Ioc</strong>：
+<ul>
+<li>IoC是一种设计原则，用于减少代码之间的耦合度。在传统的程序设计中，业务逻辑通常负责创建其所依赖的对象。而在IoC模式下，对象的创建与管理被转移到了外部容器（比如Spring容器），这个容器负责将这些依赖注入到需要它们的对象中。这种方式减少了类之间的直接依赖。</li>
+<li>在Spring的IoC容器中，依赖注入（DI）是其核心功能之一。依赖注入的过程涉及对象的创建、属性的赋值以及依赖关系的管理，这些操作大量依赖于反射机制。</li>
+</ul>
+</li>
+<li><strong>AOP</strong>：
+<ul>
+<li>AOP的核心思想是将横切关注点（如日志记录、事务管理等）从业务逻辑中分离出来，并通过切面（Aspect）动态织入到目标方法中。</li>
+<li>Spring AOP基于动态代理实现，而动态代理的两种方式（JDK动态代理和CGLIB）都依赖反射（详见后面的章节）。</li>
+</ul>
+</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li><strong>性能问题</strong>：反射操作比直接调用类的成员要慢，因为涉及额外的类型检查和安全控制。</li>
+<li><strong>安全性问题</strong>：反射可以绕过访问控制（如访问<code v-pre>private</code>成员），可能破坏封装性。</li>
+<li><strong>复杂性</strong>：代码可读性和维护性较差，容易出错。</li>
+</ol>
 <h2 id="_1-生成对象-无参构造" tabindex="-1"><a class="header-anchor" href="#_1-生成对象-无参构造"><span>1.生成对象（无参构造）</span></a></h2>
 <div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect</span><span class="token punctuation">;</span></span>
 <span class="line"></span>
@@ -7,7 +31,7 @@
 <span class="line"></span>
 <span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReflectServiceImpl</span> <span class="token punctuation">{</span></span>
 <span class="line">    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
-<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line">        <span class="token keyword">return</span> name<span class="token punctuation">;</span></span>
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"></span>
@@ -47,7 +71,7 @@
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"></span>
 <span class="line">    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
-<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"></span>
 <span class="line">    <span class="token comment">// 2.通过反射，生成对象（含参构造）</span></span>
@@ -81,7 +105,7 @@
 <span class="line"></span>
 <span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReflectServiceImpl</span> <span class="token punctuation">{</span></span>
 <span class="line">    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
-<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line">        <span class="token keyword">return</span> name<span class="token punctuation">;</span></span>
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"></span>
@@ -116,7 +140,7 @@
 <span class="line"></span>
 <span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReflectServiceImpl</span> <span class="token punctuation">{</span></span>
 <span class="line">    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
-<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line">        <span class="token keyword">return</span> name<span class="token punctuation">;</span></span>
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line">    </span>
@@ -155,7 +179,7 @@
 <span class="line"></span>
 <span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReflectServiceImpl</span> <span class="token punctuation">{</span></span>
 <span class="line">    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
-<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line">        <span class="token keyword">return</span> name<span class="token punctuation">;</span></span>
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"></span>
@@ -209,7 +233,7 @@
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"></span>
 <span class="line">    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
-<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello, "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"></span>
 <span class="line">    <span class="token comment">// 通过反射，生成对象（含参构造）</span></span>

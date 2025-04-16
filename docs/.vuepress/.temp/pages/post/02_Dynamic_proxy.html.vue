@@ -1,4 +1,219 @@
 <template><div><h1 id="动态代理模式" tabindex="-1"><a class="header-anchor" href="#动态代理模式"><span>动态代理模式</span></a></h1>
-</div></template>
+<nav class="table-of-contents"><ul><li><router-link to="#_1-前言">1.前言</router-link></li><li><router-link to="#_2-jdk动态代理">2.JDK动态代理</router-link></li><li><router-link to="#_3-cglib动态代理">3.CGLIB动态代理</router-link></li><li><router-link to="#_4-拦截器">4.拦截器</router-link></li></ul></nav>
+<h2 id="_1-前言" tabindex="-1"><a class="header-anchor" href="#_1-前言"><span>1.前言</span></a></h2>
+<p>Java有多种动态代理技术，比如JDK、CGLIB、Javassist、ASM，其中最常用的动态代理技术有两种：一种是 JDK 动态代理，这是 JDK 自带的功能；另一种是 CGLIB，这是第三方提供的一种技术。目前 Spring 常用 JDK和CGLIB，而 MyBatis 还使用 Javassist ，无论哪种代理其技术，它们的理念都是相似的。</p>
+<blockquote>
+<p>反射与动态代理的关系：</p>
+<ul>
+<li>反射是基础技术</li>
+<li>动态代理是基于反射实现的<strong>设计模式</strong></li>
+</ul>
+</blockquote>
+<h2 id="_2-jdk动态代理" tabindex="-1"><a class="header-anchor" href="#_2-jdk动态代理"><span>2.JDK动态代理</span></a></h2>
+<p>特点：基于Java自带的类（java.lang.reflect.Proxy）实现，这个类涉及到接口，这也意味着JDK动态代理只能代理<strong>接口</strong>，类不行，类要用CGLIB。</p>
+<table>
+<thead>
+<tr>
+<th>JDK动态代理</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>给接口实现类“加壳”增强功能（如日志、安全、事务）</td>
+</tr>
+<tr>
+<td>原理</td>
+<td>使用 Java 反射 + <code v-pre>Proxy</code> 动态生成代理对象</td>
+</tr>
+<tr>
+<td>限制</td>
+<td>只能代理<strong>接口</strong>（类不行，类要用 CGLIB）</td>
+</tr>
+</tbody>
+</table>
+<div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">HelloWorld</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sayHelloWorld</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloWorldImpl</span> <span class="token keyword">implements</span> <span class="token class-name">HelloWorld</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token annotation punctuation">@Override</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sayHelloWorld</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">InvocationHandler</span></span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">Method</span></span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">Proxy</span></span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">JdkProxyExample</span> <span class="token keyword">implements</span> <span class="token class-name">InvocationHandler</span> <span class="token punctuation">{</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 真实对象</span></span>
+<span class="line">    <span class="token keyword">private</span> <span class="token class-name">Object</span> target <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 1.建立代理对象与真实对象的代理关系，并返回代理对象</span></span>
+<span class="line">    <span class="token comment">// Proxy.newProxyInstance第二个参数限制了JDK动态代理只适应接口类型，不能直接代理类</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">bind</span><span class="token punctuation">(</span><span class="token class-name">Object</span> target<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token keyword">this</span><span class="token punctuation">.</span>target <span class="token operator">=</span> target<span class="token punctuation">;</span><span class="token comment">//本该放到构造函数中，这里顺便做了</span></span>
+<span class="line">        <span class="token keyword">return</span> <span class="token class-name">Proxy</span><span class="token punctuation">.</span><span class="token function">newProxyInstance</span><span class="token punctuation">(</span>target<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span></span>
+<span class="line">                target<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getInterfaces</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 2.实现代理逻辑</span></span>
+<span class="line">    <span class="token comment">// 当调用代理对象的某个方法时，这个 invoke() 方法就会被触发。</span></span>
+<span class="line">    <span class="token annotation punctuation">@Override</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">invoke</span><span class="token punctuation">(</span><span class="token class-name">Object</span> proxy<span class="token punctuation">,</span> <span class="token class-name">Method</span> method<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Throwable</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"在调度真实对象之前的服务"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token comment">// 这行代码相当于调度真实对象的方法，只是通过反射实现而已。</span></span>
+<span class="line">        <span class="token class-name">Object</span> obj <span class="token operator">=</span> method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//访问 当前类的成员变量 时，可省略this</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"在调度真实对象之后的服务"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token keyword">return</span> obj<span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token comment">// 5.JDK动态代理</span></span>
+<span class="line"><span class="token class-name">JdkProxyExample</span> jdk <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JdkProxyExample</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token class-name">HelloWorld</span> proxy <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">HelloWorld</span><span class="token punctuation">)</span> jdk<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">HelloWorldImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">proxy<span class="token punctuation">.</span><span class="token function">sayHelloWorld</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//这行代码会去执行代理对象的invoke方法</span></span>
+<span class="line"><span class="token doc-comment comment">/**</span>
+<span class="line"> * 在调度真实对象之前的服务</span>
+<span class="line"> * Hello World</span>
+<span class="line"> * 在调度真实对象之后的服务</span>
+<span class="line"> */</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="_3-cglib动态代理" tabindex="-1"><a class="header-anchor" href="#_3-cglib动态代理"><span>3.CGLIB动态代理</span></a></h2>
+<p>JDK 动态代理必须提供接口才能使用，在一些不能提供接口的环境中，只能采用其他第三方技术， 比如 CGLIB 动态代理。</p>
+<div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">net<span class="token punctuation">.</span>sf<span class="token punctuation">.</span>cglib<span class="token punctuation">.</span>proxy<span class="token punctuation">.</span></span><span class="token class-name">Enhancer</span></span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">net<span class="token punctuation">.</span>sf<span class="token punctuation">.</span>cglib<span class="token punctuation">.</span>proxy<span class="token punctuation">.</span></span><span class="token class-name">MethodInterceptor</span></span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">net<span class="token punctuation">.</span>sf<span class="token punctuation">.</span>cglib<span class="token punctuation">.</span>proxy<span class="token punctuation">.</span></span><span class="token class-name">MethodProxy</span></span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">Method</span></span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CglibProxyExample</span> <span class="token keyword">implements</span> <span class="token class-name">MethodInterceptor</span> <span class="token punctuation">{</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 1.建立代理对象与真实对象的代理关系，并返回代理对象</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">getProxy</span><span class="token punctuation">(</span><span class="token class-name">Class</span> cls<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token class-name">Enhancer</span> enhancer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Enhancer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token comment">//设置增强类型</span></span>
+<span class="line">        enhancer<span class="token punctuation">.</span><span class="token function">setSuperclass</span><span class="token punctuation">(</span>cls<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token comment">//定义代理对象为当前对象，要求当前对象实现 MethodInterceptor 方法</span></span>
+<span class="line">        enhancer<span class="token punctuation">.</span><span class="token function">setCallback</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token comment">//生成并返回代理对象</span></span>
+<span class="line">        <span class="token keyword">return</span> enhancer<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 2.实现代理逻辑</span></span>
+<span class="line">    <span class="token annotation punctuation">@Override</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">intercept</span><span class="token punctuation">(</span><span class="token class-name">Object</span> proxy<span class="token punctuation">,</span> <span class="token class-name">Method</span> method<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">,</span> <span class="token class-name">MethodProxy</span> methodProxy<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Throwable</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"调用真实对象前"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token comment">//CGLIB 反射调用真实对象方法</span></span>
+<span class="line">        <span class="token class-name">Object</span> result <span class="token operator">=</span> methodProxy<span class="token punctuation">.</span><span class="token function">invokeSuper</span><span class="token punctuation">(</span>proxy<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"调用真实对象后"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token keyword">return</span> result<span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token comment">// 6.Cglib动态代理</span></span>
+<span class="line"><span class="token class-name">CglibProxyExample</span> cpe <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CglibProxyExample</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token class-name">ReflectServiceImpl</span> obj <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ReflectServiceImpl</span><span class="token punctuation">)</span> cpe<span class="token punctuation">.</span><span class="token function">getProxy</span><span class="token punctuation">(</span><span class="token class-name">ReflectServiceImpl</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">obj<span class="token punctuation">.</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token string">"Wendy"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//这行代码会去执行代理对象的intercept方法</span></span>
+<span class="line"><span class="token doc-comment comment">/**</span>
+<span class="line"> * 调用真实对象前</span>
+<span class="line"> * Hello, Wendy</span>
+<span class="line"> * 调用真实对象后</span>
+<span class="line"> */</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="_4-拦截器" tabindex="-1"><a class="header-anchor" href="#_4-拦截器"><span>4.拦截器</span></a></h2>
+<blockquote>
+<p>反射与动态代理与拦截器的关系：</p>
+<ul>
+<li>反射是基础技术</li>
+<li>动态代理是<strong>基于反射</strong>实现的<strong>设计模式</strong></li>
+<li>拦截器是<strong>基于代理</strong>实现的应用场景</li>
+</ul>
+</blockquote>
+<div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">Method</span></span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Interceptor</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">before</span><span class="token punctuation">(</span><span class="token class-name">Object</span> proxy<span class="token punctuation">,</span> <span class="token class-name">Object</span> target<span class="token punctuation">,</span> <span class="token class-name">Method</span> method<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">around</span><span class="token punctuation">(</span><span class="token class-name">Object</span> proxy<span class="token punctuation">,</span> <span class="token class-name">Object</span> target<span class="token punctuation">,</span> <span class="token class-name">Method</span> method<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">after</span><span class="token punctuation">(</span><span class="token class-name">Object</span> proxy<span class="token punctuation">,</span> <span class="token class-name">Object</span> target<span class="token punctuation">,</span> <span class="token class-name">Method</span> method<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">InvocationHandler</span></span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">Method</span></span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">Proxy</span></span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">InterceptorJdkProxy</span> <span class="token keyword">implements</span> <span class="token class-name">InvocationHandler</span> <span class="token punctuation">{</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token keyword">private</span> <span class="token class-name">Object</span> target<span class="token punctuation">;</span><span class="token comment">//真实对象</span></span>
+<span class="line">    <span class="token keyword">private</span> <span class="token class-name">String</span> interceptorClass <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span><span class="token comment">//拦截器全限定名</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">//类的构造函数</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token class-name">InterceptorJdkProxy</span><span class="token punctuation">(</span><span class="token class-name">Object</span> target<span class="token punctuation">,</span> <span class="token class-name">String</span> interceptorClass<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token keyword">this</span><span class="token punctuation">.</span>target <span class="token operator">=</span> target<span class="token punctuation">;</span></span>
+<span class="line">        <span class="token keyword">this</span><span class="token punctuation">.</span>interceptorClass <span class="token operator">=</span> interceptorClass<span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 1.建立代理对象与真实对象的代理关系，并返回代理对象</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">Object</span> <span class="token function">bind</span><span class="token punctuation">(</span><span class="token class-name">Object</span> target<span class="token punctuation">,</span> <span class="token class-name">String</span> interceptorClass<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token keyword">return</span> <span class="token class-name">Proxy</span><span class="token punctuation">.</span><span class="token function">newProxyInstance</span><span class="token punctuation">(</span>target<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span></span>
+<span class="line">                target<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getInterfaces</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span></span>
+<span class="line">                <span class="token keyword">new</span> <span class="token class-name">InterceptorJdkProxy</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> interceptorClass<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 2.实现代理逻辑</span></span>
+<span class="line">    <span class="token annotation punctuation">@Override</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">invoke</span><span class="token punctuation">(</span><span class="token class-name">Object</span> proxy<span class="token punctuation">,</span> <span class="token class-name">Method</span> method<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Throwable</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token keyword">if</span><span class="token punctuation">(</span>interceptorClass <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">            <span class="token comment">//没有拦截器则直接反射原有方法</span></span>
+<span class="line">            <span class="token keyword">return</span> method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token punctuation">}</span></span>
+<span class="line">        <span class="token class-name">Object</span> result <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token comment">//通过反射生成拦截器对象</span></span>
+<span class="line">        <span class="token class-name">Interceptor</span> interceptor <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Interceptor</span><span class="token punctuation">)</span> <span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>interceptorClass<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token keyword">if</span><span class="token punctuation">(</span>interceptor<span class="token punctuation">.</span><span class="token function">before</span><span class="token punctuation">(</span>proxy<span class="token punctuation">,</span> target<span class="token punctuation">,</span> method<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token comment">//校验通过</span></span>
+<span class="line">            result <span class="token operator">=</span> method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//调度真实对象的方法</span></span>
+<span class="line">        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span><span class="token comment">//校验不通过</span></span>
+<span class="line">            interceptor<span class="token punctuation">.</span><span class="token function">around</span><span class="token punctuation">(</span>proxy<span class="token punctuation">,</span> target<span class="token punctuation">,</span> method<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token punctuation">}</span></span>
+<span class="line">        interceptor<span class="token punctuation">.</span><span class="token function">after</span><span class="token punctuation">(</span>proxy<span class="token punctuation">,</span> target<span class="token punctuation">,</span> method<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//finally</span></span>
+<span class="line">        <span class="token keyword">return</span> result<span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token comment">// 7.拦截器</span></span>
+<span class="line"><span class="token class-name">HelloWorld</span> proxy2 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">HelloWorld</span><span class="token punctuation">)</span> <span class="token class-name">InterceptorJdkProxy</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">HelloWorldImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span></span>
+<span class="line"><span class="token string">"com.learn.ssm.chapter2.reflect.MyInterceptor"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">proxy2<span class="token punctuation">.</span><span class="token function">sayHelloWorld</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token doc-comment comment">/**</span>
+<span class="line">* 反射方法前逻辑</span>
+<span class="line">* 取代了被代理对象的方法</span>
+<span class="line">* 反射方法后逻辑</span>
+<span class="line">*/</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></template>
 
 

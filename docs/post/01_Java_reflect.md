@@ -43,7 +43,7 @@ import java.lang.reflect.Method;
 
 public class ReflectServiceImpl {
     public String sayHello(String name) {
-        System.err.println("Hello, " + name);
+        System.out.println("Hello, " + name);
         return name;
     }
 
@@ -92,7 +92,7 @@ public class ReflectServiceImpl2 {
     }
 
     public void sayHello() {
-        System.err.println("Hello, " + name);
+        System.out.println("Hello, " + name);
     }
 
     // 2.通过反射，生成对象（含参构造）
@@ -135,7 +135,7 @@ import java.lang.reflect.Method;
 
 public class ReflectServiceImpl {
     public String sayHello(String name) {
-        System.err.println("Hello, " + name);
+        System.out.println("Hello, " + name);
         return name;
     }
 
@@ -179,7 +179,7 @@ import java.lang.reflect.Method;
 
 public class ReflectServiceImpl {
     public String sayHello(String name) {
-        System.err.println("Hello, " + name);
+        System.out.println("Hello, " + name);
         return name;
     }
     
@@ -228,7 +228,7 @@ import java.lang.reflect.Method;
 
 public class ReflectServiceImpl {
     public String sayHello(String name) {
-        System.err.println("Hello, " + name);
+        System.out.println("Hello, " + name);
         return name;
     }
 
@@ -285,7 +285,7 @@ public class ReflectServiceImpl2 {
     }
 
     public void sayHello() {
-        System.err.println("Hello, " + name);
+        System.out.println("Hello, " + name);
     }
 
     // 通过反射，生成对象（含参构造）

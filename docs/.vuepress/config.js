@@ -30,6 +30,7 @@ export default defineUserConfig({
     sidebar: [
       "/post/01_Java_reflect",
       "/post/02_Dynamic_proxy",
+      "/post/03_Design_pattern"
     ]
   }),
 

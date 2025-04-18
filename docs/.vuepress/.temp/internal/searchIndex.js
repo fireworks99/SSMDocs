@@ -137,9 +137,182 @@ export const SEARCH_INDEX = [
     "extraFields": []
   },
   {
+    "title": "责任链模式",
+    "headers": [
+      {
+        "level": 2,
+        "title": "拦截器1",
+        "slug": "拦截器1",
+        "link": "#拦截器1",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "拦截器2",
+        "slug": "拦截器2",
+        "link": "#拦截器2",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "拦截器3",
+        "slug": "拦截器3",
+        "link": "#拦截器3",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "主程序",
+        "slug": "主程序",
+        "link": "#主程序",
+        "children": []
+      }
+    ],
+    "path": "/post/04_Responce.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "观察者模式",
+    "headers": [
+      {
+        "level": 2,
+        "title": "被观察者",
+        "slug": "被观察者",
+        "link": "#被观察者",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "观察者1",
+        "slug": "观察者1",
+        "link": "#观察者1",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "观察者2",
+        "slug": "观察者2",
+        "link": "#观察者2",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "主程序",
+        "slug": "主程序",
+        "link": "#主程序",
+        "children": []
+      }
+    ],
+    "path": "/post/05_Observer.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "工厂模式与抽象工厂模式",
+    "headers": [
+      {
+        "level": 2,
+        "title": "工厂模式",
+        "slug": "工厂模式",
+        "link": "#工厂模式",
+        "children": [
+          {
+            "level": 3,
+            "title": "产品接口",
+            "slug": "产品接口",
+            "link": "#产品接口",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "具体产品类",
+            "slug": "具体产品类",
+            "link": "#具体产品类",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "工厂类",
+            "slug": "工厂类",
+            "link": "#工厂类",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "主程序",
+            "slug": "主程序",
+            "link": "#主程序",
+            "children": []
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "title": "抽象工厂模式",
+        "slug": "抽象工厂模式",
+        "link": "#抽象工厂模式",
+        "children": [
+          {
+            "level": 3,
+            "title": "产品接口",
+            "slug": "产品接口-1",
+            "link": "#产品接口-1",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "具体产品类",
+            "slug": "具体产品类-1",
+            "link": "#具体产品类-1",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "工厂接口",
+            "slug": "工厂接口",
+            "link": "#工厂接口",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "具体工厂类",
+            "slug": "具体工厂类",
+            "link": "#具体工厂类",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "主程序",
+            "slug": "主程序-1",
+            "link": "#主程序-1",
+            "children": []
+          }
+        ]
+      }
+    ],
+    "path": "/post/06_Factory.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
     "title": "",
     "headers": [],
     "path": "/404.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "",
+    "headers": [],
+    "path": "/post/.~06_Factory.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "",
+    "headers": [],
+    "path": "/post/.~05_Observer.html",
     "pathLocale": "/",
     "extraFields": []
   }

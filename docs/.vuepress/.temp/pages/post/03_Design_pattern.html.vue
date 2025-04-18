@@ -1,4 +1,5 @@
 <template><div><h1 id="设计模式" tabindex="-1"><a class="header-anchor" href="#设计模式"><span>设计模式</span></a></h1>
+<nav class="table-of-contents"><ul><li><router-link to="#按目的分为三大类">按目的分为三大类</router-link></li><li><router-link to="#_23种设计模式">23种设计模式</router-link></li><li><router-link to="#记忆小技巧">记忆小技巧</router-link></li></ul></nav>
 <h2 id="按目的分为三大类" tabindex="-1"><a class="header-anchor" href="#按目的分为三大类"><span>按目的分为三大类</span></a></h2>
 <table>
 <thead>

@@ -11,7 +11,7 @@ date: '2025-04-18'
 
 ## 工厂模式
 
-
+![工厂模式](img/factory.png)
 
 ### 产品接口
 
@@ -92,7 +92,7 @@ public class Main {
 
 ## 抽象工厂模式
 
-
+![抽象工厂模式](img/abstract.png)
 
 ### 产品接口
 

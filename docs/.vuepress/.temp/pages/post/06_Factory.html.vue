@@ -1,6 +1,7 @@
 <template><div><h1 id="工厂模式与抽象工厂模式" tabindex="-1"><a class="header-anchor" href="#工厂模式与抽象工厂模式"><span>工厂模式与抽象工厂模式</span></a></h1>
 <nav class="table-of-contents"><ul><li><router-link to="#工厂模式">工厂模式</router-link><ul><li><router-link to="#产品接口">产品接口</router-link></li><li><router-link to="#具体产品类">具体产品类</router-link></li><li><router-link to="#工厂类">工厂类</router-link></li><li><router-link to="#主程序">主程序</router-link></li></ul></li><li><router-link to="#抽象工厂模式">抽象工厂模式</router-link><ul><li><router-link to="#产品接口-1">产品接口</router-link></li><li><router-link to="#具体产品类-1">具体产品类</router-link></li><li><router-link to="#工厂接口">工厂接口</router-link></li><li><router-link to="#具体工厂类">具体工厂类</router-link></li><li><router-link to="#主程序-1">主程序</router-link></li></ul></li></ul></nav>
 <h2 id="工厂模式" tabindex="-1"><a class="header-anchor" href="#工厂模式"><span>工厂模式</span></a></h2>
+<p><img src="@source/post/img/factory.png" alt="工厂模式"></p>
 <h3 id="产品接口" tabindex="-1"><a class="header-anchor" href="#产品接口"><span>产品接口</span></a></h3>
 <div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>factory</span><span class="token punctuation">;</span></span>
 <span class="line"></span>
@@ -55,6 +56,7 @@
 <span class="line"><span class="token punctuation">}</span></span>
 <span class="line"></span></code></pre>
 <div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="抽象工厂模式" tabindex="-1"><a class="header-anchor" href="#抽象工厂模式"><span>抽象工厂模式</span></a></h2>
+<p><img src="@source/post/img/abstract.png" alt="抽象工厂模式"></p>
 <h3 id="产品接口-1" tabindex="-1"><a class="header-anchor" href="#产品接口-1"><span>产品接口</span></a></h3>
 <h4 id="设备1" tabindex="-1"><a class="header-anchor" href="#设备1"><span>设备1</span></a></h4>
 <div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>factory</span><span class="token punctuation">;</span></span>

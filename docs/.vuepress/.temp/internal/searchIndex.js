@@ -301,20 +301,6 @@ export const SEARCH_INDEX = [
     "path": "/404.html",
     "pathLocale": "/",
     "extraFields": []
-  },
-  {
-    "title": "",
-    "headers": [],
-    "path": "/post/.~06_Factory.html",
-    "pathLocale": "/",
-    "extraFields": []
-  },
-  {
-    "title": "",
-    "headers": [],
-    "path": "/post/.~05_Observer.html",
-    "pathLocale": "/",
-    "extraFields": []
   }
 ]
 

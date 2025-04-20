@@ -9,7 +9,9 @@ export const routes = Object.fromEntries([
   ["/post/05_Observer.html", { loader: () => import(/* webpackChunkName: "post_05_Observer.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/05_Observer.html.js"), meta: {"title":"观察者模式"} }],
   ["/post/06_Factory.html", { loader: () => import(/* webpackChunkName: "post_06_Factory.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/06_Factory.html.js"), meta: {"title":"工厂模式与抽象工厂模式"} }],
   ["/post/07_Builder.html", { loader: () => import(/* webpackChunkName: "post_07_Builder.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/07_Builder.html.js"), meta: {"title":"建造者模式"} }],
+  ["/post/08_Web_history.html", { loader: () => import(/* webpackChunkName: "post_08_Web_history.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/08_Web_history.html.js"), meta: {"title":"Web开发历史"} }],
   ["/404.html", { loader: () => import(/* webpackChunkName: "404.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/404.html.js"), meta: {"title":""} }],
+  ["/post/.~08_Web_history.html", { loader: () => import(/* webpackChunkName: "post_.~08_Web_history.html" */"C:/Users/Administrator/Documents/Web_FE/VuePress/ssm-vuepress/docs/.vuepress/.temp/pages/post/.~08_Web_history.html.js"), meta: {"title":""} }],
 ]);
 
 if (import.meta.webpackHot) {

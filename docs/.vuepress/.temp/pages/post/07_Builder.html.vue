@@ -1,4 +1,5 @@
 <template><div><h1 id="建造者模式" tabindex="-1"><a class="header-anchor" href="#建造者模式"><span>建造者模式</span></a></h1>
+<nav class="table-of-contents"><ul><li><router-link to="#传统方式-vs-建造者模式">传统方式 vs 建造者模式</router-link></li><li><router-link to="#不使用建造者模式">不使用建造者模式</router-link></li><li><router-link to="#使用建造者模式">使用建造者模式</router-link></li></ul></nav>
 <h2 id="传统方式-vs-建造者模式" tabindex="-1"><a class="header-anchor" href="#传统方式-vs-建造者模式"><span>传统方式 vs 建造者模式</span></a></h2>
 <table>
 <thead>

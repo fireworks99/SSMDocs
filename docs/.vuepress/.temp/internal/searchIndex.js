@@ -325,9 +325,67 @@ export const SEARCH_INDEX = [
     "extraFields": []
   },
   {
+    "title": "Web开发历史",
+    "headers": [
+      {
+        "level": 2,
+        "title": "Web 技术与框架演进（按时间）",
+        "slug": "web-技术与框架演进-按时间",
+        "link": "#web-技术与框架演进-按时间",
+        "children": [
+          {
+            "level": 3,
+            "title": "1990s — Web 1.0 静态页面时代",
+            "slug": "_1990s-—-web-1-0-静态页面时代",
+            "link": "#_1990s-—-web-1-0-静态页面时代",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "2000s — Web 2.0 动态交互、MVC",
+            "slug": "_2000s-—-web-2-0-动态交互、mvc",
+            "link": "#_2000s-—-web-2-0-动态交互、mvc",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "2010s — 前后端分离与 SPA 盛行",
+            "slug": "_2010s-—-前后端分离与-spa-盛行",
+            "link": "#_2010s-—-前后端分离与-spa-盛行",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "2020s — 现代化工具与全栈趋势",
+            "slug": "_2020s-—-现代化工具与全栈趋势",
+            "link": "#_2020s-—-现代化工具与全栈趋势",
+            "children": []
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "title": "技术出现的动因与影响总结",
+        "slug": "技术出现的动因与影响总结",
+        "link": "#技术出现的动因与影响总结",
+        "children": []
+      }
+    ],
+    "path": "/post/08_Web_history.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
     "title": "",
     "headers": [],
     "path": "/404.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "",
+    "headers": [],
+    "path": "/post/.~08_Web_history.html",
     "pathLocale": "/",
     "extraFields": []
   }

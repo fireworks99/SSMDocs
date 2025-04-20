@@ -35,6 +35,7 @@ export default defineUserConfig({
       "/post/04_Responce",
       "/post/05_Observer",
       "/post/06_Factory",
+      "/post/07_Builder",
     ]
   }),
 

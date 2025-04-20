@@ -296,6 +296,35 @@ export const SEARCH_INDEX = [
     "extraFields": []
   },
   {
+    "title": "建造者模式",
+    "headers": [
+      {
+        "level": 2,
+        "title": "传统方式 vs 建造者模式",
+        "slug": "传统方式-vs-建造者模式",
+        "link": "#传统方式-vs-建造者模式",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "不使用建造者模式",
+        "slug": "不使用建造者模式",
+        "link": "#不使用建造者模式",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "使用建造者模式",
+        "slug": "使用建造者模式",
+        "link": "#使用建造者模式",
+        "children": []
+      }
+    ],
+    "path": "/post/07_Builder.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
     "title": "",
     "headers": [],
     "path": "/404.html",

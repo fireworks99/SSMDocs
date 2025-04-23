@@ -50,6 +50,36 @@
 </ul>
 </li>
 <li>
+<p><strong>2003 - SpringMVC 发布</strong></p>
+<ul>
+<li>
+<p><strong>背景</strong>：</p>
+<ul>
+<li>
+<p>Java EE 中的 Servlet、JSP 技术开发复杂、耦合度高，不易维护；</p>
+</li>
+<li>
+<p>Spring 框架提出了 IOC 与 AOP 编程模型，为了支持 Web 开发，推出 SpringMVC 模块。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>影响</strong>：</p>
+<ul>
+<li>
+<p>实现了基于注解和配置的解耦式 Web 控制器；</p>
+</li>
+<li>
+<p>成为 Java Web MVC 开发的主流方案；</p>
+</li>
+<li>
+<p>构成 Spring 全家桶的重要基础之一。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
 <p><strong>2006 - jQuery 发布</strong></p>
 <ul>
 <li><em>背景：</em> 原生 JavaScript 操作 DOM 复杂且兼容性差，jQuery 封装 DOM 与 Ajax 操作。</li>
@@ -95,6 +125,25 @@
 <hr>
 <h3 id="_2010s-—-前后端分离与-spa-盛行" tabindex="-1"><a class="header-anchor" href="#_2010s-—-前后端分离与-spa-盛行"><span>2010s — 前后端分离与 SPA 盛行</span></a></h3>
 <ul>
+<li><strong>2010 - MyBatis（前身 iBATIS，2002）</strong>
+<ul>
+<li><strong>背景</strong>：
+<ul>
+<li>Hibernate 等 ORM 框架虽然强大但复杂，不适合一些简单或高度定制 SQL 场景；</li>
+<li>开发者希望更灵活地编写 SQL，同时避免 JDBC 冗余代码。</li>
+</ul>
+</li>
+<li><strong>影响</strong>：
+<ul>
+<li>简化数据库访问层开发，支持自定义 SQL 和对象映射；</li>
+<li>灵活度高，适用于中小型项目和对 SQL 可控性要求高的系统；</li>
+<li>与 Spring 框架深度整合，成为 Java 持久层开发常用选择。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
 <li>
 <p><strong>2010 - AngularJS（Google）发布</strong></p>
 <ul>
@@ -114,6 +163,60 @@
 <ul>
 <li><em>背景：</em> 受 Angular 与 React 启发，目标是更轻量、更易上手。</li>
 <li><em>影响：</em> 中国及亚洲市场快速普及，成为主流框架之一。</li>
+</ul>
+</li>
+<li>
+<p><strong>2014 - Spring Boot 发布</strong></p>
+<ul>
+<li><strong>背景</strong>：
+<ul>
+<li>Spring 虽功能强大，但配置复杂、上手门槛高；</li>
+<li>为了提升开发效率，简化项目搭建流程，Pivotal 推出了 Spring Boot。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+<p><strong>影响</strong>：</p>
+<ul>
+<li>
+<p>提供“约定优于配置”的自动化开发体验；</p>
+</li>
+<li>
+<p>内嵌 Tomcat/Jetty，项目无需外部容器即可运行；</p>
+</li>
+<li>
+<p>成为现代 Java 后端项目的默认标准架构。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>2015 - Spring Cloud 发布</strong></p>
+<ul>
+<li><strong>背景</strong>：
+<ul>
+<li>微服务架构兴起，系统需要支持服务注册发现、配置中心、负载均衡、链路追踪等分布式基础设施；</li>
+<li>Spring Boot 单体系统架构无法满足微服务需求。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+<p><strong>影响</strong>：</p>
+<ul>
+<li>
+<p>提供一整套微服务解决方案（与 Netflix OSS、Consul、Alibaba Cloud 等生态集成）；</p>
+</li>
+<li>
+<p>降低企业落地微服务的门槛；</p>
+</li>
+<li>
+<p>推动 Java 后端从单体系统向云原生架构过渡。</p>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>

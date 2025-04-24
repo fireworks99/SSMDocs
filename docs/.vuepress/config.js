@@ -38,6 +38,7 @@ export default defineUserConfig({
       "/post/07_Builder",
       "/post/08_Web_history",
       "/post/09_Mybatis_core",
+      "/post/10_Mybatis_config",
     ]
   }),
 

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.20" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const useChoice = localStorage.getItem('vuepress-color-scheme')
+      const systemStatus =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (useChoice === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (useChoice === 'dark' || systemStatus) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <title>SSM</title><meta name="description" content="SSM Exercise">
+    <link rel="preload" href="/SSMDocs/assets/style-qOkA8eWY.css" as="style"><link rel="stylesheet" href="/SSMDocs/assets/style-qOkA8eWY.css">
+    <link rel="modulepreload" href="/SSMDocs/assets/app-FeTzFLRH.js"><link rel="modulepreload" href="/SSMDocs/assets/404.html-Be5fVWjr.js">
+    <link rel="prefetch" href="/SSMDocs/assets/index.html-CvSj7ZUM.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/01_Java_reflect.html-CM2p3RRL.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/02_Dynamic_proxy.html-DkFMPxYL.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/03_Design_pattern.html-DbjUBbNQ.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/04_Responce.html-CO28cXFk.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/05_Observer.html-CRRwkx15.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/06_Factory.html-C7WWv7vD.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/07_Builder.html-NCQyKHWG.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/08_Web_history.html-DT68o96Z.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/09_Mybatis_core.html-D7inOtRN.js" as="script"><link rel="prefetch" href="/SSMDocs/assets/10_Mybatis_config.html-DlxZgVte.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container" vp-container data-v-be14e03f><main class="page" data-v-be14e03f><div vp-content data-v-be14e03f><h1 data-v-be14e03f>404</h1><blockquote data-v-be14e03f>That&#39;s a Four-Oh-Four.</blockquote><a class="route-link" href="/SSMDocs/" data-v-be14e03f>Take me home</a></div></main></div><!--[--><!----><!--]--><!--]--></div>
+    <script type="module" src="/SSMDocs/assets/app-FeTzFLRH.js" defer></script>
+  </body>
+</html>

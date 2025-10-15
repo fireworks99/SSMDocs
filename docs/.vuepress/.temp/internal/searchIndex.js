@@ -591,13 +591,6 @@ export const SEARCH_INDEX = [
     "path": "/404.html",
     "pathLocale": "/",
     "extraFields": []
-  },
-  {
-    "title": "",
-    "headers": [],
-    "path": "/post/.~10_Mybatis_config.html",
-    "pathLocale": "/",
-    "extraFields": []
   }
 ]
 

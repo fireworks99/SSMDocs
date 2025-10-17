@@ -1,5 +1,5 @@
 <template><div><h1 id="动态代理模式" tabindex="-1"><a class="header-anchor" href="#动态代理模式"><span>动态代理模式</span></a></h1>
-<nav class="table-of-contents"><ul><li><router-link to="#_1-前言">1.前言</router-link></li><li><router-link to="#_2-jdk动态代理">2.JDK动态代理</router-link></li><li><router-link to="#_3-cglib动态代理">3.CGLIB动态代理</router-link></li><li><router-link to="#_4-拦截器">4.拦截器</router-link></li></ul></nav>
+<nav class="table-of-contents"><ul><li><router-link to="#_1-前言">1.前言</router-link></li><li><router-link to="#_2-jdk动态代理">2.JDK动态代理</router-link></li><li><router-link to="#_3-cglib动态代理">3.CGLIB动态代理</router-link></li><li><router-link to="#_4-拦截器">4.拦截器</router-link></li><li><router-link to="#_5-总结">5.总结</router-link></li></ul></nav>
 <h2 id="_1-前言" tabindex="-1"><a class="header-anchor" href="#_1-前言"><span>1.前言</span></a></h2>
 <p>Java有多种动态代理技术，比如JDK、CGLIB、Javassist、ASM，其中最常用的动态代理技术有两种：一种是 JDK 动态代理，这是 JDK 自带的功能；另一种是 CGLIB，这是第三方提供的一种技术。目前 Spring 常用 JDK和CGLIB，而 MyBatis 还使用 Javassist ，无论哪种代理其技术，它们的理念都是相似的。</p>
 <blockquote>
@@ -214,6 +214,20 @@
 <span class="line">* 反射方法后逻辑</span>
 <span class="line">*/</span></span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></template>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="_5-总结" tabindex="-1"><a class="header-anchor" href="#_5-总结"><span>5.总结</span></a></h2>
+<p>动态代理的意义在于<strong>在不修改原始对象的情况下，增加额外的功能</strong>。</p>
+<p>这正是AOP（面向切面编程）思想的实现基础，也是现代Java框架（如Spring）的核心技术之一。</p>
+<div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre v-pre><code><span class="line">原始对象：🍎（一个干净的苹果）</span>
+<span class="line">↓</span>
+<span class="line">动态代理：🍎 + 📦（给苹果加了个包装盒）</span>
+<span class="line">        + 🎀（再系个蝴蝶结）</span>
+<span class="line">        + 💝（再加张贺卡）</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><ul>
+<li><strong>🍎</strong>：原始的业务功能</li>
+<li><strong>📦🎀💝</strong>：代理添加的额外功能（日志、事务、安全等）</li>
+<li><strong>关键</strong>：苹果本身没有被修改，只是被&quot;包装&quot;起来了</li>
+</ul>
+</div></template>
 
 

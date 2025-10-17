@@ -1,5 +1,5 @@
 <template><div><h1 id="观察者模式" tabindex="-1"><a class="header-anchor" href="#观察者模式"><span>观察者模式</span></a></h1>
-<nav class="table-of-contents"><ul><li><router-link to="#被观察者">被观察者</router-link></li><li><router-link to="#观察者1">观察者1</router-link></li><li><router-link to="#观察者2">观察者2</router-link></li><li><router-link to="#主程序">主程序</router-link></li></ul></nav>
+<nav class="table-of-contents"><ul><li><router-link to="#被观察者">被观察者</router-link></li><li><router-link to="#观察者1">观察者1</router-link></li><li><router-link to="#观察者2">观察者2</router-link></li><li><router-link to="#主程序">主程序</router-link></li><li><router-link to="#总结">总结</router-link></li></ul></nav>
 <h2 id="被观察者" tabindex="-1"><a class="header-anchor" href="#被观察者"><span>被观察者</span></a></h2>
 <div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>observer</span><span class="token punctuation">;</span></span>
 <span class="line"></span>
@@ -100,6 +100,25 @@
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"><span class="token punctuation">}</span></span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></template>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="总结" tabindex="-1"><a class="header-anchor" href="#总结"><span>总结</span></a></h2>
+<p>观察者模式像订阅公众号一样：</p>
+<p><strong>没有观察者模式：</strong></p>
+<ul>
+<li>你每天主动去检查喜欢的公众号有没有更新</li>
+<li>你要记住所有你关注的公众号</li>
+<li>有时候忘了检查，就错过重要消息</li>
+<li><strong>太累了，需要主动去问</strong></li>
+</ul>
+<p><strong>有观察者模式：</strong></p>
+<ul>
+<li>你点击&quot;关注&quot;按钮</li>
+<li>然后就不用管了</li>
+<li>公众号一发新文章，自动推送到你微信</li>
+<li><strong>你不用主动去问，消息自动来找你</strong></li>
+</ul>
+<blockquote>
+<p><strong>让被观察者（公众号）在状态变化时，自动通知所有观察者（粉丝），观察者不用主动去查询状态变化</strong></p>
+</blockquote>
+</div></template>
 
 

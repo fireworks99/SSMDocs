@@ -1,5 +1,5 @@
 <template><div><h1 id="建造者模式" tabindex="-1"><a class="header-anchor" href="#建造者模式"><span>建造者模式</span></a></h1>
-<nav class="table-of-contents"><ul><li><router-link to="#传统方式-vs-建造者模式">传统方式 vs 建造者模式</router-link></li><li><router-link to="#不使用建造者模式">不使用建造者模式</router-link></li><li><router-link to="#使用建造者模式">使用建造者模式</router-link></li></ul></nav>
+<nav class="table-of-contents"><ul><li><router-link to="#传统方式-vs-建造者模式">传统方式 vs 建造者模式</router-link></li><li><router-link to="#不使用建造者模式">不使用建造者模式</router-link></li><li><router-link to="#使用建造者模式">使用建造者模式</router-link></li><li><router-link to="#总结">总结</router-link></li></ul></nav>
 <h2 id="传统方式-vs-建造者模式" tabindex="-1"><a class="header-anchor" href="#传统方式-vs-建造者模式"><span>传统方式 vs 建造者模式</span></a></h2>
 <table>
 <thead>
@@ -174,6 +174,8 @@
 <span class="line">    <span class="token punctuation">}</span></span>
 <span class="line"><span class="token punctuation">}</span></span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></template>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="总结" tabindex="-1"><a class="header-anchor" href="#总结"><span>总结</span></a></h2>
+<p>优点：如果对象的属性较多，创建实例传参时不需要记住顺序。</p>
+</div></template>
 
 

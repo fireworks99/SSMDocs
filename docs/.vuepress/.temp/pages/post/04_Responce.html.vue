@@ -1,5 +1,5 @@
 <template><div><h1 id="责任链模式" tabindex="-1"><a class="header-anchor" href="#责任链模式"><span>责任链模式</span></a></h1>
-<nav class="table-of-contents"><ul><li><router-link to="#拦截器1">拦截器1</router-link></li><li><router-link to="#拦截器2">拦截器2</router-link></li><li><router-link to="#拦截器3">拦截器3</router-link></li><li><router-link to="#主程序">主程序</router-link></li></ul></nav>
+<nav class="table-of-contents"><ul><li><router-link to="#拦截器1">拦截器1</router-link></li><li><router-link to="#拦截器2">拦截器2</router-link></li><li><router-link to="#拦截器3">拦截器3</router-link></li><li><router-link to="#主程序">主程序</router-link></li><li><router-link to="#总结">总结</router-link></li></ul></nav>
 <h2 id="拦截器1" tabindex="-1"><a class="header-anchor" href="#拦截器1"><span>拦截器1</span></a></h2>
 <div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>learn<span class="token punctuation">.</span>ssm<span class="token punctuation">.</span>chapter2<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>response</span><span class="token punctuation">;</span></span>
 <span class="line"></span>
@@ -104,6 +104,66 @@
 <span class="line">      <span class="token punctuation">}</span></span>
 <span class="line"><span class="token punctuation">}</span></span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></template>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="总结" tabindex="-1"><a class="header-anchor" href="#总结"><span>总结</span></a></h2>
+<div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token comment">// Web请求处理链</span></span>
+<span class="line"><span class="token keyword">class</span> 请求过滤器 <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">void</span> 处理请求<span class="token punctuation">(</span><span class="token constant">HTTP</span>请求 请求<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token comment">// 自动经过一系列过滤器：</span></span>
+<span class="line">        <span class="token comment">// 1. 身份认证过滤器 → 检查登录状态</span></span>
+<span class="line">        <span class="token comment">// 2. 权限检查过滤器 → 检查用户权限</span></span>
+<span class="line">        <span class="token comment">// 3. 参数验证过滤器 → 验证请求参数</span></span>
+<span class="line">        <span class="token comment">// 4. 业务处理过滤器 → 实际处理业务</span></span>
+<span class="line">        <span class="token comment">// 5. 日志记录过滤器 → 记录操作日志</span></span>
+<span class="line">        </span>
+<span class="line">        <span class="token comment">// 任何一个过滤器都可以决定是否继续传递</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span>
+<span class="line"><span class="token comment">// 使用时：</span></span>
+<span class="line">请求过滤器链<span class="token punctuation">.</span>处理请求<span class="token punctuation">(</span>用户请求<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token comment">// 用户不用关心经过了多少层过滤</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>其他例子：</p>
+<ul>
+<li>
+<p>客服电话</p>
+<div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token comment">// 你打客服电话</span></span>
+<span class="line">客服系统<span class="token punctuation">.</span>处理问题<span class="token punctuation">(</span>我的问题<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token comment">// 自动转接：</span></span>
+<span class="line"><span class="token comment">// 1级客服：处理简单问题（查询余额）</span></span>
+<span class="line"><span class="token comment">// 2级客服：处理中等问题（业务办理）  </span></span>
+<span class="line"><span class="token comment">// 3级客服：处理复杂问题（投诉建议）</span></span>
+<span class="line"><span class="token comment">// 专家客服：处理疑难问题（技术故障）</span></span>
+<span class="line"><span class="token comment">// 你不需要知道该找谁，系统自动找合适的人</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li>
+<li>
+<p>垃圾邮件</p>
+<div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token comment">// 收到一封邮件</span></span>
+<span class="line">邮件过滤器<span class="token punctuation">.</span>处理邮件<span class="token punctuation">(</span>新邮件<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token comment">// 层层过滤：</span></span>
+<span class="line"><span class="token comment">// 规则1：黑名单过滤 → 直接删除</span></span>
+<span class="line"><span class="token comment">// 规则2：关键词过滤 → 标记为垃圾邮件</span></span>
+<span class="line"><span class="token comment">// 规则3：发件人验证 → 正常邮件</span></span>
+<span class="line"><span class="token comment">// 规则4：内容分析 → 智能分类</span></span>
+<span class="line"><span class="token comment">// 只要有一个过滤器处理了，流程就结束</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li>
+<li>
+<p>游戏伤害</p>
+<div class="language-java line-numbers-mode" data-highlighter="prismjs" data-ext="java"><pre v-pre><code><span class="line"><span class="token comment">// 玩家受到攻击</span></span>
+<span class="line">玩家<span class="token punctuation">.</span>受到伤害<span class="token punctuation">(</span><span class="token number">100</span>点伤害<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line"><span class="token comment">// 伤害经过层层减免：</span></span>
+<span class="line"><span class="token comment">// 头盔：减免20点 → 剩余80点</span></span>
+<span class="line"><span class="token comment">// 盔甲：减免30点 → 剩余50点  </span></span>
+<span class="line"><span class="token comment">// 护盾：吸收40点 → 剩余10点</span></span>
+<span class="line"><span class="token comment">// 最终：生命值减少10点</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li>
+</ul>
+</div></template>
 
 

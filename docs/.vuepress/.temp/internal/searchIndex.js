@@ -101,6 +101,13 @@ export const SEARCH_INDEX = [
         "slug": "_4-拦截器",
         "link": "#_4-拦截器",
         "children": []
+      },
+      {
+        "level": 2,
+        "title": "5.总结",
+        "slug": "_5-总结",
+        "link": "#_5-总结",
+        "children": []
       }
     ],
     "path": "/post/02_Dynamic_proxy.html",
@@ -129,6 +136,13 @@ export const SEARCH_INDEX = [
         "title": "记忆小技巧",
         "slug": "记忆小技巧",
         "link": "#记忆小技巧",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "原则：SOLID 五大原则",
+        "slug": "原则-solid-五大原则",
+        "link": "#原则-solid-五大原则",
         "children": []
       }
     ],
@@ -166,6 +180,13 @@ export const SEARCH_INDEX = [
         "slug": "主程序",
         "link": "#主程序",
         "children": []
+      },
+      {
+        "level": 2,
+        "title": "总结",
+        "slug": "总结",
+        "link": "#总结",
+        "children": []
       }
     ],
     "path": "/post/04_Responce.html",
@@ -201,6 +222,13 @@ export const SEARCH_INDEX = [
         "title": "主程序",
         "slug": "主程序",
         "link": "#主程序",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "总结",
+        "slug": "总结",
+        "link": "#总结",
         "children": []
       }
     ],
@@ -289,6 +317,28 @@ export const SEARCH_INDEX = [
             "children": []
           }
         ]
+      },
+      {
+        "level": 2,
+        "title": "总结",
+        "slug": "总结",
+        "link": "#总结",
+        "children": [
+          {
+            "level": 3,
+            "title": "工厂模式",
+            "slug": "工厂模式-1",
+            "link": "#工厂模式-1",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "抽象工厂模式",
+            "slug": "抽象工厂模式-1",
+            "link": "#抽象工厂模式-1",
+            "children": []
+          }
+        ]
       }
     ],
     "path": "/post/06_Factory.html",
@@ -317,6 +367,13 @@ export const SEARCH_INDEX = [
         "title": "使用建造者模式",
         "slug": "使用建造者模式",
         "link": "#使用建造者模式",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "总结",
+        "slug": "总结",
+        "link": "#总结",
         "children": []
       }
     ],
@@ -452,6 +509,50 @@ export const SEARCH_INDEX = [
       }
     ],
     "path": "/post/09_Mybatis_core.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "Mybatis的反射",
+    "headers": [
+      {
+        "level": 2,
+        "title": "涉及文件",
+        "slug": "涉及文件",
+        "link": "#涉及文件",
+        "children": [
+          {
+            "level": 3,
+            "title": "UserMapper",
+            "slug": "usermapper",
+            "link": "#usermapper",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "UserMapper.xml",
+            "slug": "usermapper-xml",
+            "link": "#usermapper-xml",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "UserMapperImpl",
+            "slug": "usermapperimpl",
+            "link": "#usermapperimpl",
+            "children": []
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "title": "Mybatis vs 原始反射",
+        "slug": "mybatis-vs-原始反射",
+        "link": "#mybatis-vs-原始反射",
+        "children": []
+      }
+    ],
+    "path": "/post/09_Mybatis_reflect.html",
     "pathLocale": "/",
     "extraFields": []
   },

@@ -11,6 +11,7 @@ export const routes = Object.fromEntries([
   ["/post/07_Builder.html", { loader: () => import(/* webpackChunkName: "post_07_Builder.html" */"D:/Code/SSMDocs/docs/.vuepress/.temp/pages/post/07_Builder.html.js"), meta: {"title":"建造者模式"} }],
   ["/post/08_Web_history.html", { loader: () => import(/* webpackChunkName: "post_08_Web_history.html" */"D:/Code/SSMDocs/docs/.vuepress/.temp/pages/post/08_Web_history.html.js"), meta: {"title":"Web开发历史"} }],
   ["/post/09_Mybatis_core.html", { loader: () => import(/* webpackChunkName: "post_09_Mybatis_core.html" */"D:/Code/SSMDocs/docs/.vuepress/.temp/pages/post/09_Mybatis_core.html.js"), meta: {"title":"Mybatis核心组件"} }],
+  ["/post/09_Mybatis_reflect.html", { loader: () => import(/* webpackChunkName: "post_09_Mybatis_reflect.html" */"D:/Code/SSMDocs/docs/.vuepress/.temp/pages/post/09_Mybatis_reflect.html.js"), meta: {"title":"Mybatis的反射"} }],
   ["/post/10_Mybatis_config.html", { loader: () => import(/* webpackChunkName: "post_10_Mybatis_config.html" */"D:/Code/SSMDocs/docs/.vuepress/.temp/pages/post/10_Mybatis_config.html.js"), meta: {"title":"Mybatis配置"} }],
   ["/404.html", { loader: () => import(/* webpackChunkName: "404.html" */"D:/Code/SSMDocs/docs/.vuepress/.temp/pages/404.html.js"), meta: {"title":""} }],
 ]);

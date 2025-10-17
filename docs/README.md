@@ -13,10 +13,10 @@ Spring 是一个开源的轻量级Java开发框架，提供了全面的基础设
 :::
 
 ::: danger
-MyBatis 是一款优秀的持久层框架，通过 XML 或注解方式将 SQL 语句与 Java 方法映射，实现对数据库的操作。
+MyBatis 是一款优秀的持久层框架，通过 XML 或注解方式将 SQL 语句与 Java 方法映射，实现对数据库的操作。Mybatis的本质是Java对数据库的操作。
 :::
 
 ::: details
-SSM 是由 Spring、Spring MVC 和 MyBatis 组成的主流 Java Web 开发框架组合，实现了业务逻辑、表现层和持久层的分层开发。
+SSM 是由 Spring MVC、Spring 和 MyBatis 组成的主流 Java Web 开发框架组合，实现了表现层（Controller层）、业务逻辑层（Service层）、和持久层（DAO层）的分层开发。
 :::
 

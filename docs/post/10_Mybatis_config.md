@@ -426,36 +426,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(configuration);
 
 这个转换过程，就由 `TypeHandler` 来完成。 `TypeHandler` 也分系统定义与自定义。
 
-```mermaid
-flowchart TD
-A[Java数据类型] --> B["基本数据类型<br>(Primitive)"]
-A --> C["引用数据类型<br>(Reference)"]
-
-B --> D[数值型]
-B --> E[字符型]
-B --> F[布尔型]
-
-D --> G["整数型<br>(byte, short, int, long)"]
-D --> H["浮点型<br>(float, double)"]
-
-G --> I["byte<br>8位"]
-G --> J["short<br>16位"]
-G --> K["int<br>32位"]
-G --> L["long<br>64位"]
-
-H --> M["float<br>32位"]
-H --> N["double<br>64位"]
-
-E --> O["char<br>16位 Unicode"]
-
-F --> P["boolean<br>true / false"]
-
-C --> Q[类<br>Class]
-C --> R[接口<br>Interface]
-C --> S[数组<br>Array]
-C --> T[字符串<br>String]
-C --> U[枚举<br>Enum]
-```
+![Java 类型](img/JavaTypes.svg)
 
 ### 系统已定义
 

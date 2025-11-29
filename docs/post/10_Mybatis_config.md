@@ -873,9 +873,281 @@ public class Main {
 
 ## 5.objectFactory
 
+MyBatis 在从数据库查询到结果后，需要创建实体类对象（例如 User、Role）。这个对象到底怎么创建？就是 ObjectFactory 决定的。
 
+默认是调用无参构造函数：User u = new User();
+
+但如果你想让 MyBatis **以某种特殊方式创建对象**，例如：
+
+- 实例化一个没有无参构造函数的类
+- 查询时让对象带某些默认值
+- 使用自己的构造方式 or 使用 Builder 模式
+- 创建对象时自动打印日志
+
+那就需要自定义 ObjectFactory。上述四点也是ObjectFactory的**作用/意义**。
+
+### 实例
+
+![目录结构](img/objectFactory.png)
+
+
+
+Main
+
+~~~java
+package com.learn.ssm.chapter4.main;
+
+import com.learn.ssm.chapter4.pojo.User;
+import com.learn.ssm.chapter4.mapper.UserMapper;
+import com.learn.ssm.chapter4.utils.SqlSessionFactoryUtils;
+import org.apache.ibatis.session.SqlSession;
+
+public class Main {
+    public static void main(String[] args) {
+        SqlSession sqlSession = null;
+
+        try {
+            sqlSession = SqlSessionFactoryUtils.openSqlSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+
+            User user = new User();
+            user.setId(1L);
+            user.setUsername("admin");
+            user.setSex(1);
+            int num = userMapper.insertUser(user);
+            System.out.println(num);//1
+
+            User user1 = userMapper.getUser(1L);
+            System.out.println(user1.getPassword());//null
+
+            //提交事务
+            sqlSession.commit();
+        } catch (Exception e) {
+            if(sqlSession != null) {
+                sqlSession.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+}
+~~~
+
+SqlSessionFactoryUtils
+
+~~~java
+package com.learn.ssm.chapter4.utils;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class SqlSessionFactoryUtils {
+
+    private final static Class<SqlSessionFactoryUtils> LOCK = SqlSessionFactoryUtils.class;
+
+    // 构造函数
+    private SqlSessionFactoryUtils(){}
+
+    // 单例模式
+    private static SqlSessionFactory sqlSessionFactory = null;
+    public static SqlSessionFactory getSqlSessionFactory() {
+        synchronized (LOCK) {
+            if(sqlSessionFactory != null) {
+                return sqlSessionFactory;
+            }
+
+            // XML配置方式 实例化SqlSessionFactory
+            String resource = "mybatis-config.xml";
+            InputStream inputStream;
+            try {
+                inputStream = Resources.getResourceAsStream(resource);
+                sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sqlSessionFactory;
+    }
+
+    public static SqlSession openSqlSession() {
+        if(sqlSessionFactory == null) {
+            getSqlSessionFactory();
+        }
+        return sqlSessionFactory.openSession();
+    }
+
+}
+~~~
+
+mybatis-config.xml
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 别名 -->
+    <typeAliases>
+        <typeAlias alias="role" type="com.learn.ssm.chapter3.pojo.Role"/>
+        <typeAlias alias="user" type="com.learn.ssm.chapter4.pojo.User"/>
+    </typeAliases>
+
+    <!-- 对象工厂-->
+    <objectFactory type="com.learn.ssm.chapter4.factory.DefaultStatusObjectFactory" />
+
+    <!-- 数据库环境 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/ssm"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 映射文件 -->
+    <mappers>
+        <mapper resource="com/learn/ssm/chapter3/mapper/RoleMapper.xml"/>
+        <mapper resource="com/learn/ssm/chapter4/mapper/UserMapper.xml"/>
+    </mappers>
+</configuration>
+~~~
+
+UserMapper.xml
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.ssm.chapter4.mapper.UserMapper">
+
+    <insert id="insertUser" parameterType="user">
+        insert into t_user(id, username, password, sex)
+        values(#{id}, #{username}, #{password}, #{sex})
+    </insert>
+
+    <select id="getUser" parameterType="long" resultType="user">
+        select id, username, password, sex from t_user where id = #{id}
+    </select>
+
+</mapper>
+~~~
+
+Interface UserMapper
+
+~~~java
+package com.learn.ssm.chapter4.mapper;
+
+import com.learn.ssm.chapter4.pojo.User;
+
+public interface UserMapper {
+    int insertUser(User user);
+    User getUser(Long id);
+}
+~~~
+
+User
+
+~~~java
+package com.learn.ssm.chapter4.pojo;
+
+public class User {
+    private Long id;
+    private String username;
+    private String password;
+    private Integer sex;
+
+    // Getter and Setter
+}
+~~~
+
+DefaultStatusObjectFactory
+
+~~~java
+package com.learn.ssm.chapter4.factory;
+
+import com.learn.ssm.chapter4.pojo.User;
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+
+public class DefaultStatusObjectFactory extends DefaultObjectFactory {
+
+    @Override
+    public <T> T create(Class<T> type) {
+
+        // 让 MyBatis 按正常方式创建对象
+        T obj = super.create(type);
+
+        // 如果是 User 类，自动设置密码
+        if (obj instanceof User) {
+            User user = (User) obj;
+
+            if(user.getPassword() == "") {
+                user.setPassword("123456");  // 默认值
+            }
+            System.out.println("ObjectFactory 设置默认密码为 123456");
+        }
+
+        return obj;
+    }
+}
+~~~
+
+### 流程
+
+* 进入**Main类**，执行main方法
+  * `sqlSession = SqlSessionFactoryUtils.openSqlSession()`
+  * 进入**SqlSessionFactoryUtils类**
+    * `sqlSessionFactory == null` => `getSqlSessionFactory();`
+    * `inputStream = Resources.getResourceAsStream("mybatis-config.xml");`
+    * `sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);`
+    * Mybatis读取**mybatis-config.xml文件**
+      * 加载别名`<typeAliases>`
+      * 注册`<ObjectFactory>`
+      * 创建数据源、连接池、事务管理器`<environments>`
+      * 读取 **UserMapper.xml**文件`mappers`
+        * `<mapper namespace="com.learn.ssm.chapter4.mapper.UserMapper">`
+        * 为 **Interface UserMapper** 生成 Mapper 动态代理类
+    * build() 返回 SqlSessionFactory
+    * `return sqlSessionFactory.openSession();`这里构建了sqlSession
+  * `UserMapper userMapper = sqlSession.getMapper(UserMapper.class);`
+    * 查找已解析的 Mapper 映射（之前 `<mappers>` 读入的）
+    * 通过 JDK 动态代理创建一个 UserMapper 的代理对象（即这里的userMapper）
+  * new 一个User对象并给属性赋值
+  * `int num = userMapper.insertUser(user);`
+  * 代理对象根据方法名(insertUser)找到**UserMapper.xml**中的insert标签
+    * 根据 SQL 生成 PreparedStatement
+    * 将 `user` 中的属性映射到 SQL 参数
+    * 执行 insert 语句，返回影响行数
+  * 得到num，`System.out.println(num);` 打印num（输出1）
+  * `User user1 = userMapper.getUser(1L);`
+  * 代理对象根据方法名(getUser)找到**UserMapper.xml**中的select标签
+    * 根据 SQL 生成 PreparedStatement
+    * 将 `user` 中的属性映射到 SQL 参数
+    * 执行select语句，拿到结果
+    * 根据`resultType="user"`这里的user匹配`<typeAliases>`得知，需要一个User实例
+    * 找到已注册的`<ObjectFactory>`，调用**DefaultStatusObjectFactory**
+      * `T obj = super.create(type);`先正常创建对象
+      * `if (obj instanceof User) {...}`如果是User类，执行某些动作
+      * `return obj;`返回处理后的对象
+    * 拿到了处理后的User实例
+  * 将处理后的User实例赋给user1
+  * 后续打印、提交事务`commit`、关闭sqlSession`close`（归还数据库连接到连接池）
+
+这是举了一个“查询时让对象带某些默认值”的例子，值得注意的是，数据库中该记录里的password仍为空字符串。
 
 ## 6.plugins
+
 
 
 

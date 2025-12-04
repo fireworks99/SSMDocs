@@ -1153,6 +1153,119 @@ public class DefaultStatusObjectFactory extends DefaultObjectFactory {
 
 ## 7.environments
 
+### 作用
+
+> 为不同运行环境（开发 / 测试 / 生产）配置不同的数据库连接信息，并在 MyBatis 启动时选择其中一个作为当前环境。
+
+### 结构
+
+~~~xml
+<environments default="dev">
+  <!-- 开发环境 -->
+  <environment id="dev">
+    <transactionManager type="JDBC" />
+    <dataSource type="POOLED">
+      <property name="driver" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://localhost:3306/test"/>
+      <property name="username" value="root"/>
+      <property name="password" value="123456"/>
+    </dataSource>
+  </environment>
+
+  <!-- 生产环境 -->
+  <environment id="prod">
+    <transactionManager type="MANAGED" />
+    <dataSource type="UNPOOLED">
+      <property name="driver" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://prod.example.com:3306/prod"/>
+      <property name="username" value="prod_user"/>
+      <property name="password" value="prod_pass"/>
+    </dataSource>
+  </environment>
+</environments>
+~~~
+
+* `environments` default="dev"
+  * `environment` id="dev"
+    * `transactionManager`
+    * `dataSource`
+  * `environment` id="prod"
+    *  `transactionManager`
+    * `dataSource`
+
+### transactionManager（2）
+
+MyBatis 内置两类：
+
+#### ① `JDBC`
+
+- 使用 JDBC 提供的事务
+- 手动管理提交/回滚
+- 最常用
+
+```xml
+<transactionManager type="JDBC"/>
+```
+
+#### ② `MANAGED`
+
+- 事务交给容器（如 Spring、Java EE 应用服务器）
+- MyBatis 不负责 commit/rollback
+
+```xml
+<transactionManager type="MANAGED"/>
+```
+
+**如果用 Spring + MyBatis，事务一般由 Spring 管理，此时 type="MANAGED" 会看到较多。**
+
+### dataSource (3)
+
+MyBatis 内置三类：
+
+#### ① `POOLED`（推荐）
+
+- MyBatis 自带的连接池
+- 会复用连接，性能好
+
+```xml
+<dataSource type="POOLED">
+```
+
+#### ② `UNPOOLED`
+
+- 每次都新建连接，不复用
+- 性能差，不推荐
+
+```xml
+<dataSource type="UNPOOLED">
+```
+
+#### ③ `JNDI`
+
+- 根据应用服务器的 JNDI 获取数据源，一般用于企业环境
+
+```xml
+<dataSource type="JNDI">
+```
+
+### Mybatis启动过程
+
+1. **读取 mybatis-config.xml**
+2. 找到 `<environments> ... </environments>`
+3. 按照默认（或用户指定）选择一个 `<environment id="xxx">`
+4. 根据 `<transactionManager>` 和 `<dataSource>`
+    创建一个 `Environment` 对象
+5. 把这个 Environment 放入 MyBatis 的 `Configuration` 中
+6. 用这个 Configuration 构建 `SqlSessionFactory`
+7. 之后每次你 openSession()，都是从这个 Environment 获取连接
+
+### Spring Boot + Mybatis
+
+ **Spring Boot + MyBatis 不使用 `<environments>`**
+ 因为数据库配置全部在 `application.yml` 里，由 Spring 管理。
+
+MyBatis 的 environments 会被 Spring 忽略。
+
 
 
 ## 8.databaseIdProvider

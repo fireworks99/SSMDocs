@@ -1270,7 +1270,132 @@ MyBatis 的 environments 会被 Spring 忽略。
 
 ## 8.databaseIdProvider
 
+### 作用
 
+> databaseIdProvider 用来识别当前使用的数据库类型（MySQL、Oracle、PostgreSQL...），并让 MyBatis 根据数据库类型自动选择对应的 SQL。
+
+因为不同数据库的 SQL 语法不完全相同，例如：
+
+- MySQL 的分页语句是 `LIMIT ?, ?`
+- Oracle 是 `ROWNUM`
+- PostgreSQL 是 `LIMIT OFFSET`
+- SQLServer 是 `TOP` 或 OFFSET FETCH
+
+如果你想保持一个 Mapper 文件能兼容多个数据库，就需要这项功能。
+
+### 配置
+
+```xml
+<databaseIdProvider type="DB_VENDOR">
+  <property name="MySQL" value="mysql"/>
+  <property name="Oracle" value="oracle"/>
+  <property name="PostgreSQL" value="pg"/>
+</databaseIdProvider>
+```
+
+| 数据库厂商名（驱动返回） | 最终的 databaseId |
+| ------------------------ | ----------------- |
+| MySQL                    | mysql             |
+| Oracle                   | oracle            |
+| PostgreSQL               | pg                |
+
+MyBatis 会根据 JDBC 的 `DatabaseMetaData#getDatabaseProductName()` 获取数据库厂商名，然后映射为你定义的 `databaseId`。
+
+~~~xml
+<select id="selectUser" resultType="User">
+  SELECT * FROM user
+</select>
+
+<select id="selectUser" databaseId="mysql" resultType="User">
+  SELECT * FROM user LIMIT 10
+</select>
+
+<select id="selectUser" databaseId="oracle" resultType="User">
+  SELECT * FROM user WHERE ROWNUM <= 10
+</select>
+~~~
+
+当你访问 selectUser() 时：
+
+- 如果数据库是 MySQL → 使用带 databaseId="mysql" 的 SQL
+- 如果数据库是 Oracle → 使用带 databaseId="oracle" 的 SQL
+- 如果没有任何匹配 → 退回使用没有 databaseId 的那条
+
+MyBatis 内置 **DB_VENDOR**（除此以外，可自定义provider）：
+
+它做的事就是：
+
+- 调用 JDBC 的 `getDatabaseProductName()` → 得到如 “MySQL”、"PostgreSQL"
+- 根据 property 映射得到 databaseId
+
+### 过程
+
+MyBatis 在解析 Mapper XML 时：
+
+1. 根据 dataSource 连接数据库获取数据库厂商名
+2. 用 databaseIdProvider 将厂商名映射成一个 databaseId（如“mysql”）
+3. 解析每个 SQL 标签时：
+   - 如果标签带 databaseId，并且与当前 databaseId 相同 → 添加到 mappedStatement
+   - 如果标签带 databaseId，但与当前不匹配 → 忽略
+   - 如果标签不带 databaseId：
+     - 当前数据库没有其它匹配 version 的 SQL 时才会使用它
+
+> MyBatis 会优先使用**带 databaseId 的 SQL**
+> 默认的 SQL（无 databaseId）是 fallback
 
 ## 9.mappers
+
+### ①.mybatis-config.xml显式注册
+
+#### 1.resource
+
+~~~xml
+<mappers>
+  <mapper resource="com/example/mapper/UserMapper.xml"/>
+</mappers>
+~~~
+
+#### 2.class
+
+~~~xml
+<mapper class="com.example.mapper.UserMapper"/>
+~~~
+
+#### 3.url
+
+~~~xml
+<mapper url="file:///D:/mappers/UserMapper.xml"/>
+~~~
+
+### ②.使用package自动扫描整个包
+
+~~~xml
+<mappers>
+  <package name="com.example.mapper"/>
+</mappers>
+~~~
+
+* 自动扫描该包下所有 **Mapper 接口 + 同名 XML 文件**
+* XML 和接口必须 **在相同包路径下**
+
+一句话，XML与Interface**同名+同包**
+
+### ③.注解
+
+~~~java
+@Mapper
+public interface UserMapper {
+    @Select("SELECT * FROM user WHERE id = #{id}")
+    User getUser(Long id);
+}
+~~~
+
+或者在配置类（或启动类）写一次：
+
+~~~java
+@MapperScan("com.example.mapper")
+public class AppConfig {}
+~~~
+
+需要注意的是，使用@Select、@Insert注解时，若是无Spring，则需要在mybatis-config.xml中手动**注册**，即写在mappers里；若是spring项目，则可以通过N个@Mapper一一代替或通过一个@MapperScan代替。
 

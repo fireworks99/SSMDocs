@@ -40,6 +40,7 @@ export default defineUserConfig({
       "/post/09_Mybatis_core",
       "/post/09_Mybatis_reflect",
       "/post/10_Mybatis_config",
+      "/post/11_Mapper"
     ]
   }),
 

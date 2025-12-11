@@ -56,5 +56,142 @@ date: '2025-12-10'
 
 ### ②.多个参数
 
+1. Map传参
+   * 优点：几乎适应所有场景
+   * 缺点：
+     * 可读性差
+     * 不能限定参数的类型
+2. 注解传参
+   * 优点：
+     * 可读性好
+     * 可以限定参数的类型
+   * 缺点：参数较多时写起来麻烦
+3. Java Bean传参
+   * 优点：即使参数多，只需传一个对象
+   * 缺点：复杂场景可能另外需要注解传参
+4. 混合传参（注解 + Java Bean）
+   * 优点：可以应对复杂场景
+
+~~~java
+package com.learn.ssm.chapter5.mapper;
+
+import com.learn.ssm.chapter5.pojo.PageParam;
+import com.learn.ssm.chapter5.pojo.Role;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+
+public interface RoleMapper {
+    public Role getRole(Long id);
+    public List<Role> findRolesByMap(Map<String,Object> parameterMap);
+    public List<Role> findRolesByAnnotation(@Param("roleName") String roleName, @Param("note") String note) ;
+    public List<Role> findRolesByBean(Role role);
+    public List<Role> findByMix(@Param("params") Role role, @Param("page") PageParam PageParam) ;
+}
+~~~
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.ssm.chapter5.mapper.RoleMapper">
+
+    <select id="getRole" parameterType="long" resultType="role5">
+        select id, role_name as roleName, note from t_role where id = #{id}
+    </select>
+
+    <select id="findRolesByMap" parameterType="map" resultType="role5">
+        select id, role_name as roleName, note from t_role
+        where role_name like concat('%', #{roleName}, '%')
+        and note like concat('%', #{note}, '%')
+    </select>
+
+    <select id="findRolesByAnnotation" resultType="role5">
+        select id, role_name as roleName, note from t_role
+        where role_name like concat('%', #{roleName}, '%')
+        and note like concat('%', #{note}, '%')
+    </select>
+
+    <select id="findRolesByBean" parameterType="com.learn.ssm.chapter5.pojo.Role" resultType="role5">
+        select id, role_name as roleName, note from t_role
+        where role_name like concat('%', #{roleName}, '%')
+        and note like concat('%', #{note}, '%')
+    </select>
+
+    <select id="findByMix" resultType="role5">
+        <bind name="offset" value="(page.pageNo - 1) * page.pageSize"/>
+        select id, role_name as roleName, note from t_role
+        where role_name like concat('%', #{params.roleName}, '%')
+        and note like concat('%', #{params.note}, '%')
+        limit #{offset}, #{page.pageSize}
+    </select>
+
+</mapper>
+~~~
+
+~~~java
+package com.learn.ssm.chapter5.main;
+
+import com.learn.ssm.chapter5.pojo.PageParam;
+import com.learn.ssm.chapter5.pojo.Role;
+import com.learn.ssm.chapter5.utils.SqlSessionFactoryUtils;
+import com.learn.ssm.chapter5.mapper.RoleMapper;
+import org.apache.ibatis.session.SqlSession;
+
+import java.util.HashMap;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        SqlSession sqlSession = null;
+
+        try {
+            sqlSession = SqlSessionFactoryUtils.openSqlSession();
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            Role role = roleMapper.getRole(11L);
+            System.out.println(role.toString());
+
+            // 1.Map传参
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("roleName", "is");
+            hashMap.put("note", "st");
+            List<Role> rolesByMap = roleMapper.findRolesByMap(hashMap);
+            System.out.println(rolesByMap.toString());
+
+            // 2.注解传参
+            List<Role> rolesByAnnotation = roleMapper.findRolesByAnnotation("is", "st");
+            System.out.println(rolesByAnnotation.toString());
+
+            // 3.Java Bean传参
+            Role role1 = new Role();
+            role1.setRoleName("is");
+            role1.setNote("st");
+            List<Role> rolesByBean = roleMapper.findRolesByBean(role1);
+            System.out.println(rolesByBean.toString());
+
+            // 4.混合传参(注解 + Java Bean)
+            PageParam pageParam = new PageParam();
+            pageParam.setPageNo(1);
+            pageParam.setPageSize(1);
+            List<Role> byMix = roleMapper.findByMix(role1, pageParam);
+            System.out.println(byMix);
+
+            //提交事务
+            sqlSession.commit();
+        } catch (Exception e) {
+            if(sqlSession != null) {
+                sqlSession.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+}
+~~~
+
 
 

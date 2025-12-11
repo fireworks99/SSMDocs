@@ -193,5 +193,99 @@ public class Main {
 }
 ~~~
 
+### ③resultMap
+
+> 有了resultType，为什么还需要resultMap？
+
+使用 `resultType` 时，MyBatis 会直接把 **column → property** 自动转换，但这只适合：
+
+- 字段名和属性名一致
+- 一张表对应一个简单实体类
+- 没有关联对象
+
+但真实业务远比这个复杂。
+
+当出现以下情况时，就必须使用 `resultMap`：
+
+1. 多表联查
+2. 一对多映射
+3. 嵌套查询
+4. 多态
+
+User.java
+
+~~~java
+package com.learn.ssm.chapter5.pojo;
+
+public class User {
+    private Long id;
+    private String username;
+    private String password;
+    private Integer sex;
+    private Dept dept;
+    // ...
+}
+~~~
+
+Dept.java
+
+~~~java
+package com.learn.ssm.chapter5.pojo;
+
+public class Dept {
+    private Long id;
+    private String name;
+    // ...
+}
+~~~
+
+UserMapper.java
+
+~~~java
+package com.learn.ssm.chapter5.mapper;
+
+import com.learn.ssm.chapter5.pojo.User;
+
+public interface UserMapper {
+    User getUser(Long id);
+}
+~~~
+
+UserMapper.xml
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.ssm.chapter5.mapper.UserMapper">
+
+    <resultMap id="userMap" type="user5">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+
+        <association property="dept" javaType="dept">
+            <id column="deptId" property="id"/>
+            <result column="deptName" property="name"/>
+        </association>
+    </resultMap>
+
+    <select id="getUser" parameterType="long" resultMap="userMap">
+        select u.id, u.username, d.id as deptId, d.name as deptName
+        from t_user u join dept d on u.deptId = d.id where u.id = #{id}
+    </select>
+
+</mapper>
+~~~
+
+Main.java
+
+~~~java
+UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+User user1 = userMapper.getUser(1L);
+User user2 = userMapper.getUser(2L);
+System.out.println(user1.toString());//User{id=1, username='admin', password='null', sex=null, deptId=1, deptName='技术部'}
+System.out.println(user2.toString());//User{id=2, username='user', password='null', sex=null, deptId=2, deptName='业务部'}
+~~~
+
 
 

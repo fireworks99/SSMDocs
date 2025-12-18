@@ -414,3 +414,29 @@ System.out.println(deptAfter.toString());//Dept{id=12, name='After部'}
 
 上述例子中`insertDeptBefore`通过`selectKey`实现了自定义主键（最大id + 3）
 
+
+
+## 4.resultType=map
+
+> `resultType="map"` 是 MyBatis 的“**万金油返回类型**”，
+>  适合“不规则结果集”，但不适合“核心业务模型”。
+
+~~~java
+List<Map<String,Object>> selectDynamicColumns(@Param("columns") String columns);
+~~~
+
+~~~xml
+<select id="selectDynamicColumns" resultType="map">
+    select ${columns} from t_user
+</select>
+~~~
+
+~~~java
+// Dynamic column + resultType=map
+List<Map<String, Object>> list = userMapper.selectDynamicColumns("id,username,deptId");
+System.out.println(list);
+//[{deptId=1, id=1, username=admin}, {deptId=2, id=2, username=user}]
+~~~
+
+这里还用到了动态列，不过它有SQL注入风险，可通过Java层枚举白名单或xml choose白名单来避免。
+

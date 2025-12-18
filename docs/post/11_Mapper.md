@@ -328,3 +328,89 @@ System.out.println(users.toString());
 
 
 
+## 3.insert
+
+### ①.主键回填
+
+> 什么是主键回填：MyBatis 中 `insert` 拿到数据库自动生成的主键（自增 id）
+
+应用场景：insert 一条记录 => 拿到生成的 id => 用这个 id 插入子表 / 关联表
+
+三种方式：
+
+1. useGeneratedKeys
+2. `<selectKey>`
+3. Mapper 方法直接返回主键（原本返回影响行数）（不推荐）
+
+~~~java
+package com.learn.ssm.chapter5.mapper;
+
+import com.learn.ssm.chapter5.pojo.Dept;
+
+public interface DeptMapper {
+    int insertDept(Dept dept);
+    int insertDept2(Dept dept);
+    int insertDeptBefore(Dept dept);
+    int insertDeptAfter(Dept dept);
+}
+~~~
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.ssm.chapter5.mapper.DeptMapper">
+
+    <insert id="insertDept" parameterType="dept">
+        insert into dept(name) values(#{name})
+    </insert>
+
+    <insert id="insertDept2" parameterType="dept" useGeneratedKeys="true" keyProperty="id">
+        insert into dept(name) values(#{name})
+    </insert>
+
+    <insert id="insertDeptBefore" parameterType="dept">
+        <selectKey keyProperty="id" resultType="long" order="BEFORE">
+            select if (max(id) = null, 1, max(id) + 3) from dept
+        </selectKey>
+        insert into dept(id, name) values(#{id}, #{name})
+    </insert>
+
+    <insert id="insertDeptAfter" parameterType="dept">
+        insert into dept(name) values(#{name})
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+</mapper>
+~~~
+
+~~~java
+// insert
+DeptMapper deptMapper = sqlSession.getMapper(DeptMapper.class);
+Dept dept = new Dept();
+dept.setName("销售部");
+deptMapper.insertDept(dept);
+System.out.println(dept.toString());//Dept{id=null, name='销售部'}
+
+Dept dept1 = new Dept();
+dept1.setName("运维部");
+deptMapper.insertDept2(dept1);
+System.out.println(dept1.toString());//Dept{id=8, name='运维部'}
+
+Dept deptBefore = new Dept();
+deptBefore.setName("Before部");
+deptMapper.insertDeptBefore(deptBefore);
+System.out.println(deptBefore.toString());//Dept{id=11, name='Before部'}
+
+Dept deptAfter = new Dept();
+deptAfter.setName("After部");
+deptMapper.insertDeptAfter(deptAfter);
+System.out.println(deptAfter.toString());//Dept{id=12, name='After部'}
+~~~
+
+### ②自定义主键
+
+上述例子中`insertDeptBefore`通过`selectKey`实现了自定义主键（最大id + 3）
+

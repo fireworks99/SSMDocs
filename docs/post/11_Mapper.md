@@ -287,5 +287,44 @@ System.out.println(user1.toString());//User{id=1, username='admin', password='nu
 System.out.println(user2.toString());//User{id=2, username='user', password='null', sex=null, deptId=2, deptName='业务部'}
 ~~~
 
+### ④.RowBounds
+
+Mybatis自带的**逻辑分页（内存分页）**，而非**物理分页（数据库分页）**。
+
+~~~java
+public interface UserMapper {
+    User getUser(Long id);
+    List<User> getUserRowBounds(RowBounds rowBounds);
+}
+~~~
+
+~~~xml
+<select id="getUser" parameterType="long" resultMap="userMap">
+    select u.id, u.username, d.id as deptId, d.name as deptName
+    from t_user u join dept d on u.deptId = d.id where u.id = #{id}
+</select>
+
+<select id="getUserRowBounds" resultMap="userMap">
+    select u.id, u.username, d.id as deptId, d.name as deptName
+    from t_user u join dept d on u.deptId = d.id
+</select>
+~~~
+
+~~~java
+// RowBounds
+RowBounds rowBounds = new RowBounds(1, 1);
+List<User> users = userMapper.getUserRowBounds(rowBounds);
+System.out.println(users.toString());
+~~~
+
+![RowBounds](img/Rowbounds.png)
+
+* 数据库分页：效果最佳
+* 后端逻辑分页：
+  * 若数据库与后端程序属于同一服务器，则从数据库取出数据后占用大量内存。
+  * 若数据库与后端程序不在同一服务器，则数据库所在服务器占用大量内存，且传输大量数据，且占用后端服务器大量内存。
+* 前端逻辑分页：
+  * 传输大量数据，用户等待时间长，体验差。
+
 
 

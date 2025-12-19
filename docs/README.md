@@ -20,3 +20,6 @@ MyBatis 是一款优秀的持久层框架，通过 XML 或注解方式将 SQL �
 SSM 是由 Spring MVC、Spring 和 MyBatis 组成的主流 Java Web 开发框架组合，实现了表现层（Controller层）、业务逻辑层（Service层）、和持久层（DAO层）的分层开发。
 :::
 
+
+
+<SSMIntro />

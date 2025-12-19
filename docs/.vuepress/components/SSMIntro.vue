@@ -123,17 +123,13 @@ export default {
 </script>
 
 <style scoped>
+/* --- 浅色模式 --- */
 .ssm-card {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 16px;
   background: #fff;
-}
-
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
+  color: #111;
 }
 
 .tabs button {
@@ -141,23 +137,13 @@ export default {
   border-radius: 6px;
   border: 1px solid #d1d5db;
   background: #f9fafb;
+  color: #111;
   cursor: pointer;
 }
 
 .tabs button.active {
   background: #3b82f6;
   color: #fff;
-}
-
-.content {
-  margin-bottom: 16px;
-}
-
-.flow-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 8px 0;
 }
 
 .flow-line span {
@@ -180,5 +166,38 @@ export default {
   background: #6366f1;
   color: #fff;
   cursor: pointer;
+}
+
+/* --- 暗黑模式 --- */
+.dark .ssm-card {
+  background: #1e1e1e;
+  border-color: #333;
+  color: #eee;
+}
+
+.dark .tabs button {
+  background: #2a2a2a;
+  color: #ccc;
+  border-color: #444;
+}
+
+.dark .tabs button.active {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.dark .flow-line span {
+  background: #333;
+  color: #ccc;
+}
+
+.dark .flow-line span.active {
+  background: #10b981;
+  color: #fff;
+}
+
+.dark .flow-btn {
+  background: #6366f1;
+  color: #fff;
 }
 </style>

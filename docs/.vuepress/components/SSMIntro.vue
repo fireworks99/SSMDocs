@@ -169,34 +169,34 @@ export default {
 }
 
 /* --- 暗黑模式 --- */
-.dark .ssm-card {
+html[data-theme=dark] .ssm-card {
   background: #1e1e1e;
   border-color: #333;
   color: #eee;
 }
 
-.dark .tabs button {
+html[data-theme=dark] .tabs button {
   background: #2a2a2a;
   color: #ccc;
   border-color: #444;
 }
 
-.dark .tabs button.active {
+html[data-theme=dark].tabs button.active {
   background: #3b82f6;
   color: #fff;
 }
 
-.dark .flow-line span {
+html[data-theme=dark] .flow-line span {
   background: #333;
   color: #ccc;
 }
 
-.dark .flow-line span.active {
+html[data-theme=dark] .flow-line span.active {
   background: #10b981;
   color: #fff;
 }
 
-.dark .flow-btn {
+html[data-theme=dark] .flow-btn {
   background: #6366f1;
   color: #fff;
 }

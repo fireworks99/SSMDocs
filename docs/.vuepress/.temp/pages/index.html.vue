@@ -10,11 +10,11 @@
 </div>
 <div class="hint-container caution">
 <p class="hint-container-title">警告</p>
-<p>MyBatis 是一款优秀的持久层框架，通过 XML 或注解方式将 SQL 语句与 Java 方法映射，实现对数据库的操作。</p>
+<p>MyBatis 是一款优秀的持久层框架，通过 XML 或注解方式将 SQL 语句与 Java 方法映射，实现对数据库的操作。Mybatis的本质是Java对数据库的操作。</p>
 </div>
 <details class="hint-container details"><summary>详情</summary>
-<p>SSM 是由 Spring、Spring MVC 和 MyBatis 组成的主流 Java Web 开发框架组合，实现了业务逻辑、表现层和持久层的分层开发。</p>
+<p>SSM 是由 Spring MVC、Spring 和 MyBatis 组成的主流 Java Web 开发框架组合，实现了表现层（Controller层）、业务逻辑层（Service层）、和持久层（DAO层）的分层开发。</p>
 </details>
-</div></template>
+<SSMIntro /></div></template>
 
 

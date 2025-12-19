@@ -651,7 +651,22 @@ export const SEARCH_INDEX = [
         "title": "5.objectFactory",
         "slug": "_5-objectfactory",
         "link": "#_5-objectfactory",
-        "children": []
+        "children": [
+          {
+            "level": 3,
+            "title": "实例",
+            "slug": "实例",
+            "link": "#实例",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "流程",
+            "slug": "流程",
+            "link": "#流程",
+            "children": []
+          }
+        ]
       },
       {
         "level": 2,
@@ -665,24 +680,191 @@ export const SEARCH_INDEX = [
         "title": "7.environments",
         "slug": "_7-environments",
         "link": "#_7-environments",
-        "children": []
+        "children": [
+          {
+            "level": 3,
+            "title": "作用",
+            "slug": "作用",
+            "link": "#作用",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "结构",
+            "slug": "结构",
+            "link": "#结构",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "transactionManager（2）",
+            "slug": "transactionmanager-2",
+            "link": "#transactionmanager-2",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "dataSource (3)",
+            "slug": "datasource-3",
+            "link": "#datasource-3",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "Mybatis启动过程",
+            "slug": "mybatis启动过程",
+            "link": "#mybatis启动过程",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "Spring Boot + Mybatis",
+            "slug": "spring-boot-mybatis",
+            "link": "#spring-boot-mybatis",
+            "children": []
+          }
+        ]
       },
       {
         "level": 2,
         "title": "8.databaseIdProvider",
         "slug": "_8-databaseidprovider",
         "link": "#_8-databaseidprovider",
-        "children": []
+        "children": [
+          {
+            "level": 3,
+            "title": "作用",
+            "slug": "作用-1",
+            "link": "#作用-1",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "配置",
+            "slug": "配置",
+            "link": "#配置",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "过程",
+            "slug": "过程",
+            "link": "#过程",
+            "children": []
+          }
+        ]
       },
       {
         "level": 2,
         "title": "9.mappers",
         "slug": "_9-mappers",
         "link": "#_9-mappers",
-        "children": []
+        "children": [
+          {
+            "level": 3,
+            "title": "①.mybatis-config.xml显式注册",
+            "slug": "_1-mybatis-config-xml显式注册",
+            "link": "#_1-mybatis-config-xml显式注册",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "②.使用package自动扫描整个包",
+            "slug": "_2-使用package自动扫描整个包",
+            "link": "#_2-使用package自动扫描整个包",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "③.注解",
+            "slug": "_3-注解",
+            "link": "#_3-注解",
+            "children": []
+          }
+        ]
       }
     ],
     "path": "/post/10_Mybatis_config.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "映射器",
+    "headers": [
+      {
+        "level": 2,
+        "title": "1.概述",
+        "slug": "_1-概述",
+        "link": "#_1-概述",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "2.select",
+        "slug": "_2-select",
+        "link": "#_2-select",
+        "children": [
+          {
+            "level": 3,
+            "title": "①.常用属性",
+            "slug": "_1-常用属性",
+            "link": "#_1-常用属性",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "②.多个参数",
+            "slug": "_2-多个参数",
+            "link": "#_2-多个参数",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "③resultMap",
+            "slug": "_3resultmap",
+            "link": "#_3resultmap",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "④.RowBounds",
+            "slug": "_4-rowbounds",
+            "link": "#_4-rowbounds",
+            "children": []
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "title": "3.insert",
+        "slug": "_3-insert",
+        "link": "#_3-insert",
+        "children": [
+          {
+            "level": 3,
+            "title": "①.主键回填",
+            "slug": "_1-主键回填",
+            "link": "#_1-主键回填",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "②自定义主键",
+            "slug": "_2自定义主键",
+            "link": "#_2自定义主键",
+            "children": []
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "title": "4.resultType=map",
+        "slug": "_4-resulttype-map",
+        "link": "#_4-resulttype-map",
+        "children": []
+      }
+    ],
+    "path": "/post/11_Mapper.html",
     "pathLocale": "/",
     "extraFields": []
   },
@@ -694,3 +876,16 @@ export const SEARCH_INDEX = [
     "extraFields": []
   }
 ]
+
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept()
+  if (__VUE_HMR_RUNTIME__.updateSearchIndex) {
+    __VUE_HMR_RUNTIME__.updateSearchIndex(searchIndex)
+  }
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(({ searchIndex }) => {
+    __VUE_HMR_RUNTIME__.updateSearchIndex(searchIndex)
+  })
+}

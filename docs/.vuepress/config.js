@@ -11,6 +11,12 @@ export default defineUserConfig({
   description: 'SSM Exercise',
   base: "/SSMDocs/",
 
+  // 添加全局样式文件
+  head: [
+    ['link', { rel: 'stylesheet', href: '/styles/index.scss' }],
+    ['link', { rel: 'icon', href: '/img/favicon.png' }]
+  ],
+
   theme: defaultTheme({
     logo: '/img/logo.gif',
     locales: {

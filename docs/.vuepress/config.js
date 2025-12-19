@@ -2,6 +2,7 @@ import { defaultTheme } from '@vuepress/theme-default'
 import { defineUserConfig } from 'vuepress'
 import { viteBundler } from '@vuepress/bundler-vite'
 import { searchPlugin } from '@vuepress/plugin-search'
+import { markdownTabPlugin } from '@vuepress/plugin-markdown-tab'
 
 export default defineUserConfig({
   lang: 'zh-CN',
@@ -46,6 +47,12 @@ export default defineUserConfig({
 
   bundler: viteBundler(),
   plugins: [
-    searchPlugin({})
+    searchPlugin({}),
+    markdownTabPlugin({
+      // 启用代码选项卡
+      codeTabs: true,
+      // 启用选项卡
+      tabs: true,
+    }),
   ]
 })

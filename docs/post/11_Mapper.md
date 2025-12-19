@@ -440,3 +440,154 @@ System.out.println(list);
 
 这里还用到了动态列，不过它有SQL注入风险，可通过Java层枚举白名单或xml choose白名单来避免。
 
+
+
+## 5.sql
+
+`<sql>` 标签用于 **定义可重用的 SQL 片段**，可以在其他 SQL 语句中通过 `<include>` 引用。
+
+* **不单独执行**，只是“片段”
+* 支持 **动态 SQL / 参数**
+* 可以减少重复代码，增加可维护性
+
+
+
+应用场景：
+
+::: tabs 
+
+@tab 复用列名
+
+~~~xml
+<sql id="baseColumns">
+    id, username, age
+</sql>
+
+<select id="selectAll" resultType="User">
+    SELECT <include refid="baseColumns"/> FROM t_user
+</select>
+
+<select id="selectById" resultType="User">
+    SELECT <include refid="baseColumns"/> FROM t_user WHERE id = #{id}
+</select>
+~~~
+
+@tab 复用条件
+
+~~~xml
+<sql id="userWhere">
+    <where>
+        <if test="username != null">
+            username = #{username}
+        </if>
+        <if test="age != null">
+            AND age = #{age}
+        </if>
+    </where>
+</sql>
+
+<select id="selectUser" resultType="User">
+    SELECT * FROM t_user
+    <include refid="userWhere"/>
+</select>
+~~~
+
+@tab 复用JOIN
+
+~~~xml
+<sql id="joinDept">
+    JOIN dept d ON u.dept_id = d.id
+</sql>
+
+<select id="selectUserDept" resultType="User">
+    SELECT u.id, u.username, d.name AS deptName
+    FROM t_user u
+    <include refid="joinDept"/>
+</select>
+~~~
+
+@tab 动态SQL
+
+~~~xml
+<sql id="dynamicColumns">
+    <if test="includeAge">
+        age,
+    </if>
+    username, id
+</sql>
+
+<select id="selectUserDynamic" resultType="User">
+    SELECT <include refid="dynamicColumns"/> FROM t_user
+</select>
+~~~
+
+:::
+
+::: code-tabs 
+
+@tab 复用列名
+
+~~~xml
+<sql id="baseColumns">
+    id, username, age
+</sql>
+
+<select id="selectAll" resultType="User">
+    SELECT <include refid="baseColumns"/> FROM t_user
+</select>
+
+<select id="selectById" resultType="User">
+    SELECT <include refid="baseColumns"/> FROM t_user WHERE id = #{id}
+</select>
+~~~
+
+@tab 复用条件
+
+~~~xml
+<sql id="userWhere">
+    <where>
+        <if test="username != null">
+            username = #{username}
+        </if>
+        <if test="age != null">
+            AND age = #{age}
+        </if>
+    </where>
+</sql>
+
+<select id="selectUser" resultType="User">
+    SELECT * FROM t_user
+    <include refid="userWhere"/>
+</select>
+~~~
+
+@tab 复用JOIN
+
+~~~xml
+<sql id="joinDept">
+    JOIN dept d ON u.dept_id = d.id
+</sql>
+
+<select id="selectUserDept" resultType="User">
+    SELECT u.id, u.username, d.name AS deptName
+    FROM t_user u
+    <include refid="joinDept"/>
+</select>
+~~~
+
+@tab 动态SQL
+
+~~~xml
+<sql id="dynamicColumns">
+    <if test="includeAge">
+        age,
+    </if>
+    username, id
+</sql>
+
+<select id="selectUserDynamic" resultType="User">
+    SELECT <include refid="dynamicColumns"/> FROM t_user
+</select>
+~~~
+
+:::

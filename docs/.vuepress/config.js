@@ -13,8 +13,7 @@ export default defineUserConfig({
 
   // 添加全局样式文件
   head: [
-    ['link', { rel: 'stylesheet', href: '/styles/index.scss' }],
-    ['link', { rel: 'icon', href: '/img/favicon.png' }]
+    ['link', { rel: 'icon', href: '/SSMDocs/img/favicon.png' }]
   ],
 
   theme: defaultTheme({

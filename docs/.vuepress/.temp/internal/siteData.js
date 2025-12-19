@@ -1,4 +1,4 @@
-export const siteData = JSON.parse("{\"base\":\"/SSMDocs/\",\"lang\":\"zh-CN\",\"title\":\"SSM\",\"description\":\"SSM Exercise\",\"head\":[],\"locales\":{}}")
+export const siteData = JSON.parse("{\"base\":\"/SSMDocs/\",\"lang\":\"zh-CN\",\"title\":\"SSM\",\"description\":\"SSM Exercise\",\"head\":[[\"link\",{\"rel\":\"icon\",\"href\":\"/SSMDocs/img/favicon.png\"}]],\"locales\":{}}")
 
 if (import.meta.webpackHot) {
   import.meta.webpackHot.accept()

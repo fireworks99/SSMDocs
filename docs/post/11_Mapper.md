@@ -596,6 +596,8 @@ System.out.println(list);
 
 ## 6.级联
 
+### ①.示例
+
 ![表结构](img/Employee.svg)
 
 ~~~sql
@@ -1188,3 +1190,133 @@ public Employee processResultSet(ResultSet rs) {
 
 这是一个**继承 + 多态**的设计模式，不是简单的"切换替换"。
 
+
+
+### ②.DTO
+
+级联是一种设计理念，实际工程开发中，若采用级联，则**SQL混乱、性能堪忧、N+1冗余**，所以企业级开发常用**DTO（数据传输对象）**来代替级联。
+
+> DTO 方案 = 可控 SQL + 可预测性能 + 更贴近真实业务（灵活多变）
+>
+> DTO的思路是：接口要什么数据，就一次性查出来， 用一个 DTO 装好返回。
+
+员工详情 DTO（示例）
+
+```java
+public class EmployeeDetailDTO {
+
+    // ===== 员工基本信息 =====
+    private Long empId;
+    private String realName;
+    private Integer sex;
+    private Date birthday;
+    private String mobile;
+    private String email;
+    private String position;
+
+    // ===== 工作证 =====
+    private String department;
+
+    // ===== 体检信息（统一结构）=====
+    private String heart;
+    private String liver;
+    private String spleen;
+    private String lung;
+    private String kidney;
+    private String special;   // 男：prostate / 女：uterus
+    private String healthNote;
+
+    // ===== 任务 =====
+    private List<TaskDTO> tasks;
+}
+```
+
+子 DTO（任务）
+
+```java
+public class TaskDTO {
+    private Long taskId;
+    private String taskName;
+    private String context;
+}
+```
+
+ **DTO 是“为接口量身定制的结构”**。
+
+Mapper：**多次 SQL + 手动组装**
+
+EmployeeMapper.xml
+
+```xml
+<select id="getEmployeeBase"
+        resultType="com.learn.ssm.chapter5_cascade.dto.EmployeeDetailDTO">
+    SELECT
+        e.id        AS empId,
+        e.real_name AS realName,
+        e.sex,
+        e.birthday,
+        e.mobile,
+        e.email,
+        e.position,
+        wc.department
+    FROM t_employee e
+    LEFT JOIN t_work_card wc ON wc.emp_id = e.id
+    WHERE e.id = #{id}
+</select>
+```
+
+HealthMapper.xml（统一）
+
+```xml
+<select id="getMaleHealth"
+        resultType="map">
+    SELECT heart, liver, spleen, lung, kidney, prostate AS special, note AS healthNote
+    FROM t_male_health_form
+    WHERE emp_id = #{id}
+</select>
+
+<select id="getFemaleHealth"
+        resultType="map">
+    SELECT heart, liver, spleen, lung, kidney, uterus AS special, note AS healthNote
+    FROM t_female_health_form
+    WHERE emp_id = #{id}
+</select>
+```
+
+TaskMapper.xml
+
+```xml
+<select id="getTasksByEmpId"
+        resultType="com.learn.ssm.chapter5_cascade.dto.TaskDTO">
+    SELECT
+        t.id        AS taskId,
+        et.task_name AS taskName,
+        t.context
+    FROM t_employee_task et
+    JOIN t_task t ON t.id = et.task_id
+    WHERE et.emp_id = #{empId}
+</select>
+```
+
+Service 层（真正的“组装者”）
+
+```java
+EmployeeDetailDTO dto = employeeMapper.getEmployeeBase(id);
+
+if (dto.getSex() == 1) {
+    Map<String, Object> health = healthMapper.getMaleHealth(id);
+    BeanUtils.copyProperties(health, dto);
+} else {
+    Map<String, Object> health = healthMapper.getFemaleHealth(id);
+    BeanUtils.copyProperties(health, dto);
+}
+
+List<TaskDTO> tasks = taskMapper.getTasksByEmpId(id);
+dto.setTasks(tasks);
+```
+
+DTO 的作用是：
+
+- 不暴露表结构
+- 不被实体关系绑架
+- 前端想要什么就给什么

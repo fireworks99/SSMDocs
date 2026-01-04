@@ -1323,7 +1323,7 @@ DTO 的作用是：
 
 
 
-### ③N+1问题
+### ③.N+1问题
 
 这是 **ORM / MyBatis / JPA / Hibernate** 里一个**必须理解、而且非常常见的性能问题**。
 
@@ -1408,7 +1408,7 @@ SELECT * FROM t_employee_task WHERE emp_id IN (1,2,3,...);
 
 
 
-### ④延迟加载（懒加载）
+### ④.延迟加载（懒加载）
 
 ~~~xml
 <settings>
@@ -1472,3 +1472,98 @@ aggressiveLazyLoading 是“策略开关”
 
 
 
+### ⑤.JOIN实现级联
+
+~~~xml
+<resultMap id="employee2" type="com.learn.ssm.chapter5_cascade.pojo.Employee">
+    <id column="id" property="id"/>
+    <result column="real_name" property="realName"/>
+    <result column="sex" property="sex" typeHandler="com.learn.ssm.chapter5_cascade.typeHandler.SexEnumTypeHandler"/>
+    <result column="birthday" property="birthday"/>
+    <result column="mobile" property="mobile"/>
+    <result column="email" property="email"/>
+    <result column="position" property="position"/>
+    <result column="note" property="note"/>
+    <association property="workCard" javaType="com.learn.ssm.chapter5_cascade.pojo.WorkCard" column="id">
+        <id column="wc_id" property="id"/>
+        <result column="id" property="empId"/>
+        <result column="wc_real_name" property="realName"/>
+        <result column="wc_department" property="department"/>
+        <result column="wc_mobile" property="mobile"/>
+        <result column="wc_position" property="position"/>
+        <result column="wc_note" property="note"/>
+    </association>
+    <collection property="employeeTaskList" ofType="com.learn.ssm.chapter5_cascade.pojo.EmployeeTask" column="id">
+        <id column="et_id" property="id"/>
+        <result column="id" property="empId"/>
+        <result column="et_task_name" property="taskName"/>
+        <result column="et_note" property="note"/>
+        <association property="task" javaType="com.learn.ssm.chapter5_cascade.pojo.Task" column="et_task_id">
+            <id column="t_id" property="id"/>
+            <result column="t_title" property="title"/>
+            <result column="t_context" property="context"/>
+            <result column="t_note" property="note"/>
+        </association>
+    </collection>
+    <discriminator javaType="int" column="sex">
+        <case value="1" resultMap="maleHealthFormMapper2"/>
+        <case value="0" resultMap="femaleHealthFormMapper2"/>
+    </discriminator>
+</resultMap>
+
+<resultMap type="com.learn.ssm.chapter5_cascade.pojo.MaleEmployee" id="maleHealthFormMapper2" extends="employee2">
+    <association property="healthForm" column="id" javaType="com.learn.ssm.chapter5_cascade.pojo.MaleHealthForm">
+        <id column="h_id" property="id"/>
+        <result column="h_emp_id" property="empId"/>
+        <result column="h_heart" property="heart"/>
+        <result column="h_liver" property="liver"/>
+        <result column="h_spleen" property="spleen"/>
+        <result column="h_lung" property="lung"/>
+        <result column="h_kidney" property="kidney"/>
+        <result column="h_prostate" property="prostate"/>
+        <result column="h_note" property="note"/>
+    </association>
+</resultMap>
+
+<resultMap type="com.learn.ssm.chapter5_cascade.pojo.FemaleEmployee" id="femaleHealthFormMapper2" extends="employee2">
+    <association property="healthForm" column="id" javaType="com.learn.ssm.chapter5_cascade.pojo.FemaleHealthForm">
+        <id column="h_id" property="id"/>
+        <result column="h_emp_id" property="empId"/>
+        <result column="h_heart" property="heart"/>
+        <result column="h_liver" property="liver"/>
+        <result column="h_spleen" property="spleen"/>
+        <result column="h_lung" property="lung"/>
+        <result column="h_kidney" property="kidney"/>
+        <result column="h_uterus" property="uterus"/>
+        <result column="h_note" property="note"/>
+    </association>
+</resultMap>
+
+<select id="getEmployee2" parameterType="long" resultMap="employee2">
+    select emp.id, emp.real_name, emp.sex, emp.birthday, emp.mobile, emp.email, emp.position, emp.note,
+           et.id as et_id, et.task_id as et_task_id, et.task_name as et_task_name, et.note as et_note,
+            if (emp.sex = 1, mhf.id, fhf.id) as h_id,
+            if (emp.sex = 1, mhf.emp_id, fhf.emp_id) as h_emp_id,
+            if (emp.sex = 1, mhf.heart, fhf.heart) as h_heart,
+            if (emp.sex = 1, mhf.liver, fhf.liver) as h_liver,
+            if (emp.sex = 1, mhf.spleen, fhf.spleen) as h_spleen,
+            if (emp.sex = 1, mhf.lung, fhf.lung) as h_lung,
+            if (emp.sex = 1, mhf.kidney, fhf.kidney) as h_kidney,
+            if (emp.sex = 1, mhf.note, fhf.note) as h_note,
+            mhf.prostate as h_prostate, fhf.uterus as h_uterus,
+            wc.id as wc_id, wc.real_name as wc_real_name, wc.department as wc_department,
+            wc.mobile as wc_mobile, wc.position as wc_position, wc.note as wc_note,
+            t.id as t_id, t.title as t_title, t.context as t_context, t.note as t_note
+    from t_employee emp
+    left join t_employee_task et on emp.id = et.emp_id
+    left join t_female_health_form fhf on emp.id = fhf.emp_id
+    left join t_male_health_form mhf on emp.id = mhf.emp_id
+    left join t_work_card wc on emp.id = wc.emp_id
+    left join t_task t on et.task_id = t.id
+    where emp.id = #{id}
+</select>
+~~~
+
+这能解决N+1问题，但是SQL复杂不利用维护，且一次性取出全部数据（无论是否需要）占用大量内存。
+
+这种级联适应于关联较少的场景。

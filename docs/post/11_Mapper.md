@@ -1320,3 +1320,155 @@ DTO 的作用是：
 - 不暴露表结构
 - 不被实体关系绑架
 - 前端想要什么就给什么
+
+
+
+### ③N+1问题
+
+这是 **ORM / MyBatis / JPA / Hibernate** 里一个**必须理解、而且非常常见的性能问题**。
+
+> **N+1 问题 = 查 1 次主表 + 查 N 次子表
+>  本来 1 次能解决的事，却执行了 N+1 次 SQL**
+
+比如查询所有员工（employee）及其各自的任务（task）：
+
+1. SELECT * FROM t_employee;假设查出了 **N 个员工**。
+2. 后续N条SQL：
+   SELECT * FROM t_employee_task WHERE emp_id = 1;
+   SELECT * FROM t_employee_task WHERE emp_id = 2;
+   SELECT * FROM t_employee_task WHERE emp_id = 3;
+   ...
+
+总共执行了1 + N条SQL，被称为N + 1问题。
+
+
+
+上述过程的伪代码：
+
+~~~xml
+<select id="getEmployeeList" resultMap="employeeMap">
+    SELECT id, real_name, sex FROM t_employee
+</select>
+
+<resultMap id="employeeMap" type="Employee">
+    <id property="id" column="id"/>
+
+    <collection property="taskList"
+                column="id"
+                select="getTaskByEmpId"/>
+</resultMap>
+~~~
+
+1️⃣ 查员工（1 条）
+2️⃣ 遍历员工
+3️⃣ 每个员工触发 getTaskByEmpId（N 条）
+
+
+
+如何避免N+1问题：
+
+方案一：**JOIN + collection result** 代替 **collection select**
+
+~~~xml
+<select id="getEmployeeList" resultMap="employeeMap">
+    SELECT e.id, e.real_name, t.id AS task_id, t.task_name
+    FROM t_employee e
+    LEFT JOIN t_employee_task t ON e.id = t.emp_id;
+</select>
+
+<resultMap id="employeeMap" type="Employee">
+    <id property="id" column="id"/>
+
+    <collection property="taskList" ofType="Task">
+        <id property="id" column="task_id"/>
+        <result property="taskName" column="task_name"/>
+    </collection>
+</resultMap>
+~~~
+
+方案二：IN查询
+
+~~~sql
+SELECT * FROM t_employee;
+SELECT * FROM t_employee_task WHERE emp_id IN (1,2,3,...);
+~~~
+
+
+
+| 组合                | 风险         |
+| ------------------- | ------------ |
+| collection + select | N+1          |
+| association + list  | N+1          |
+| lazy + for 循环     | N+1          |
+| toString / JSON     | **瞬间 N+1** |
+
+
+
+虽然有**延迟加载**这种设计，但是它并不能解决N+1问题。
+
+
+
+### ④延迟加载（懒加载）
+
+~~~xml
+<settings>
+    <setting name="lazyLoadingEnabled" value="true"/>
+    <setting name="aggressiveLazyLoading" value="false"/>
+</settings>
+~~~
+
+~~~java
+Employee employee = employeeMapper.getEmployee(1L);// 返回 MaleEmployee 对象
+logger.info(employee instanceof MaleEmployee);//true
+logger.info(employee.toString());
+~~~
+
+lazyLoadingEnabled如果没有置为true，那么执行employeeMapper.getEmployee(1L)时SQL就查询了Employee + Task + WorkCard + HealthForm。
+
+lazyLoadingEnabled置为true后，执行employeeMapper.getEmployee(1L)时SQL只查询了Employee + HealthForm（discriminator），而association以及collection对应SQL没有被调用，我在employee.toString()中访问了employeeTaskList跟workCard，所以这里才去执行对应的select SQL。
+
+~~~shell
+EBUG 2026-01-04 15:00:31,520 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==>  Preparing: select id, real_name as realName, sex, birthday, mobile, email, position, note from t_employee where id = ? 
+DEBUG 2026-01-04 15:00:31,543 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==> Parameters: 1(Long)
+DEBUG 2026-01-04 15:00:31,574 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ====>  Preparing: select id, emp_id as empId, heart, liver, spleen, lung, kidney, prostate, note from t_male_health_form where emp_id = ? 
+DEBUG 2026-01-04 15:00:31,575 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ====> Parameters: 1(Long)
+DEBUG 2026-01-04 15:00:31,576 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: <====      Total: 1
+DEBUG 2026-01-04 15:00:31,578 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: <==      Total: 1
+ INFO 2026-01-04 15:00:31,579 com.learn.ssm.chapter5_cascade.main.Main: true
+DEBUG 2026-01-04 15:00:31,579 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==>  Preparing: SELECT id, emp_id as empId, real_name as realName, department, mobile, position, note FROM t_work_card where emp_id = ? 
+DEBUG 2026-01-04 15:00:31,580 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==> Parameters: 1(Long)
+DEBUG 2026-01-04 15:00:31,581 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: <==      Total: 1
+DEBUG 2026-01-04 15:00:31,583 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==>  Preparing: select id, emp_id, task_name, task_id, note from t_employee_task where emp_id = ? 
+DEBUG 2026-01-04 15:00:31,583 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==> Parameters: 1(Integer)
+DEBUG 2026-01-04 15:00:31,585 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: <==      Total: 1
+DEBUG 2026-01-04 15:00:31,587 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==>  Preparing: select id, title, context, note from t_task where id = ? 
+DEBUG 2026-01-04 15:00:31,587 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: ==> Parameters: 1(Long)
+DEBUG 2026-01-04 15:00:31,589 org.apache.ibatis.logging.jdbc.BaseJdbcLogger: <==      Total: 1
+ INFO 2026-01-04 15:00:31,589 com.learn.ssm.chapter5_cascade.main.Main: Employee{id=1, realName='张三', sex=MALE, birthday=Sat May 12 00:00:00 CDT 1990, mobile='13800000001', email='zhangsan@test.com', position='工程师', note='技术骨干', workCard=WorkCard{id=1, empId=1, realName='张三', department='研发部', mobile='13800000001', position='工程师', note='正式员工'}, employeeTaskList=[EmployeeTask{id=1, empId=1, task=Task{id=1, title='系统开发', context='完成核心模块开发', note='优先级高'}, taskName='系统开发', note='负责后端模块'}], healthForm=MaleHealthForm{id=1, empId=1, heart='正常', liver='轻度脂肪肝', spleen='正常', lung='正常', kidney='正常', prostate='正常', note='注意饮食'}}
+~~~
+
+这里日志中可以看出logger.info(employee instanceof MaleEmployee);//true之前查了Employee + HealthForm，之后查了Task + WorkCard。
+
+
+
+而**aggressive**LazyLoading（**激进式**懒加载），被设为true时，表示“一旦访问到懒加载属性中的某一个，则加载所有懒加载属性”，被置为false时，表示“哪个懒加载属性被访问了才去加载它”。
+
+
+lazyLoadingEnabled的含义是：
+
+| 选项    | 作用                              |
+| ------- | --------------------------------- |
+| `true`  | 允许使用延迟加载                  |
+| `false` | association / collection 立刻加载 |
+
+它只是“开关”，不决定加载策略
+
+aggressiveLazyLoading 是“策略开关”
+
+| 值                     | 行为                                            |
+| ---------------------- | ----------------------------------------------- |
+| `true`（默认，老版本） | **只要访问任意一个懒属性 → 全部懒属性一起加载** |
+| `false`（推荐）        | **访问哪个属性 → 只加载哪个**                   |
+
+
+

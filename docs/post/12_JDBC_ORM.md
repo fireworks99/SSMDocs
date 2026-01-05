@@ -5,6 +5,12 @@ author: fireworks99
 date: '2026-01-05'
 ---
 
+[[toc]]
+
+![JDBC ORM](img/JDBC.drawio.svg)
+
+
+
 ## JDBC
 
 **JDBC** 是 **Java Database Connectivity** 的缩写，是 **Java 访问关系型数据库的标准 API**。
@@ -172,7 +178,7 @@ conn.rollback();
 
 ------
 
-### ⑥.JDBC 的缺点（为什么要 MyBatis / JPA）
+### ⑥.JDBC 的缺点
 
 | 问题       | 说明              |
 | ---------- | ----------------- |

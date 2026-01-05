@@ -1567,3 +1567,114 @@ aggressiveLazyLoading 是“策略开关”
 这能解决N+1问题，但是SQL复杂不利用维护，且一次性取出全部数据（无论是否需要）占用大量内存。
 
 这种级联适应于关联较少的场景。
+
+### ⑥.多对多级联
+
+![user_role](img/user_role.svg)
+
+一个用户可以有多个角色（后端开发工程师、架构师、副部长），一个角色（后端开发工程师）可以分配给多个用户，所以用户跟角色是多对多的级联。
+
+由于多对多级联很复杂，所以通常将其拆分成两个一对多的级联。
+
+~~~java
+public class User {
+    private Long id;
+    private String username;
+    private List<Role> roleList;
+
+    // getter, setter and toString
+}
+~~~
+
+~~~java
+public class Role {
+    private Long id;
+    private String roleName;
+    private List<User> userList;
+    
+    // getter, setter and toString
+}
+~~~
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.ssm.chapter5_user_role.mapper.UserMapper">
+
+    <resultMap type="com.learn.ssm.chapter5_user_role.pojo.User" id="userMapper">
+        <id column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <collection property="roleList" column="id" fetchType="lazy"
+                    select="com.learn.ssm.chapter5_user_role.mapper.RoleMapper.findRolesByUserId"/>
+    </resultMap>
+
+    <select id="getUser" parameterType="long" resultMap="userMapper">
+        select id, username from t_user where id = #{id}
+    </select>
+
+    <select id="findUsersByRoleId" parameterType="long" resultMap="userMapper">
+        select u.id, u.username from t_user u, t_user_role ur
+        where u.id = ur.user_id and ur.role_id = #{roleId}
+    </select>
+
+</mapper>
+~~~
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.ssm.chapter5_user_role.mapper.RoleMapper">
+
+    <resultMap type="com.learn.ssm.chapter5_user_role.pojo.Role" id="roleMapper">
+        <id column="id" property="id"/>
+        <result column="role_name" property="roleName"/>
+        <collection property="userList" column="id" fetchType="lazy"
+                    select="com.learn.ssm.chapter5_user_role.mapper.UserMapper.findUsersByRoleId"/>
+    </resultMap>
+
+    <select id="getRole" parameterType="long" resultMap="roleMapper">
+        select id, role_name from t_role where id = #{id}
+    </select>
+
+    <select id="findRolesByUserId" parameterType="long" resultMap="roleMapper">
+        select r.id, r.role_name from t_role r, t_user_role ur
+        where r.id = ur.role_id and ur.user_id = #{userId}
+    </select>
+
+</mapper>
+~~~
+
+~~~java
+public class Main {
+    public static void main(String[] args) {
+        SqlSession sqlSession = null;
+
+        try {
+            Logger logger = Logger.getLogger(Main.class);
+            sqlSession = SqlSessionFactoryUtils.openSqlSession();
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            Role role = roleMapper.getRole(1L);
+//            logger.info(role.toString());函数无限互相调用，造成栈溢出(StackOverflow)
+            List<User> userList = role.getUserList();
+//            logger.info(userList);//函数无限互相调用，造成栈溢出(StackOverflow)
+
+            //提交事务
+            sqlSession.commit();
+        } catch (Exception e) {
+            if(sqlSession != null) {
+                sqlSession.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+}
+~~~
+
+不过值得注意的是，如果不开启懒加载，会导致函数无限互相调用，造成**栈溢出**(StackOverflow)。
+

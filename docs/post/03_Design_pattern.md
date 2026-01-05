@@ -1,5 +1,5 @@
 ---
-title: 设计模式简介
+title: 1️⃣设计模式简介
 lang: zh-CN
 author: fireworks99
 date: '2025-04-16'

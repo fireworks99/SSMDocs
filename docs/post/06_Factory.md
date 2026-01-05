@@ -1,5 +1,5 @@
 ---
-title: 工厂模式与抽象工厂模式
+title: 1️⃣工厂模式与抽象工厂模式
 lang: zh-CN
 author: fireworks99
 date: '2025-04-18'

@@ -1,5 +1,5 @@
 ---
-title: 责任链模式
+title: 1️⃣责任链模式
 lang: zh-CN
 author: fireworks99
 date: '2025-04-18'

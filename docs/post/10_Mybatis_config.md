@@ -1,5 +1,5 @@
 ---
-title: Mybatis配置(mybatis-config.xml)
+title: 2️⃣Mybatis配置(mybatis-config.xml)
 lang: zh-CN
 author: fireworks99
 date: '2025-04-24'

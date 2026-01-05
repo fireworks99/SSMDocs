@@ -1,5 +1,5 @@
 ---
-title: 2️⃣Mybatis的反射
+title: 2-Mybatis的反射
 lang: zh-CN
 author: fireworks99
 date: '2025-10-17'

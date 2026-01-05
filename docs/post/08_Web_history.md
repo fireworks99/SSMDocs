@@ -1,5 +1,5 @@
 ---
-title: 2️⃣Web开发历史
+title: 2-Web开发历史
 lang: zh-CN
 author: ChatGPT
 date: '2025-04-20'

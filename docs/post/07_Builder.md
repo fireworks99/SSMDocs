@@ -1,5 +1,5 @@
 ---
-title: 1️⃣建造者模式
+title: 1-建造者模式
 lang: zh-CN
 author: fireworks99
 date: '2025-04-20'

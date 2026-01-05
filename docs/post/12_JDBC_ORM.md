@@ -1,5 +1,5 @@
 ---
-title: 2️⃣JDBC and ORM
+title: 2-JDBC and ORM
 lang: zh-CN
 author: fireworks99
 date: '2026-01-05'

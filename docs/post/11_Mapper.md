@@ -1,5 +1,5 @@
 ---
-title: 2️⃣映射器(XxxMapper.xml)
+title: 2-映射器(XxxMapper.xml)
 lang: zh-CN
 author: fireworks99
 date: '2025-12-10'

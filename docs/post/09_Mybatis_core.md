@@ -1,5 +1,5 @@
 ---
-title: 2️⃣Mybatis核心组件
+title: 2-Mybatis核心组件
 lang: zh-CN
 author: fireworks99
 date: '2025-04-23'

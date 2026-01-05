@@ -1678,3 +1678,164 @@ public class Main {
 
 不过值得注意的是，如果不开启懒加载，会导致函数无限互相调用，造成**栈溢出**(StackOverflow)。
 
+
+
+## 7.缓存
+
+MyBatis 提供了 **两级缓存**：
+
+| 级别                     | 作用范围        | 默认   | 是否可关闭        |
+| ------------------------ | --------------- | ------ | ----------------- |
+| 一级缓存（Local Cache）  | `SqlSession`    | ✅ 开启 | ❌（只能调整范围） |
+| 二级缓存（Mapper Cache） | Mapper 命名空间 | ❌ 关闭 | ✅                 |
+
+
+
+### ①.一级缓存
+
+- **默认开启**
+- 生命周期 = `SqlSession`
+- 同一个 `SqlSession` 内，相同 SQL + 相同参数 → 只查一次 DB
+
+~~~java
+SqlSession session = sqlSessionFactory.openSession();
+
+User u1 = mapper.getById(1);
+User u2 = mapper.getById(1);//第二次直接走缓存，不发 SQL
+
+System.out.println(u1 == u2); // true
+~~~
+
+#### 缓存的key
+
+MyBatis 内部使用：
+
+```
+MappedStatement + SQL + 参数 + RowBounds + 环境
+```
+
+所以：
+
+- SQL 文本变了 ❌
+- 参数变了 ❌
+- RowBounds 不同 ❌
+
+都会导致缓存失效。
+
+#### 缓存失效
+
+**以下操作会清空一级缓存：**
+
+1. `session.commit()`
+2. `session.rollback()`
+3. `session.close()`
+4. 执行 **insert / update / delete**
+5. 手动清空：`session.clearCache();`
+
+#### 实际项目
+
+在 **Spring + MyBatis** 中：
+
+```java
+@Transactional
+public void test() {
+    mapper.getById(1);
+    mapper.getById(1); // 仍然走一级缓存
+}
+```
+
+因为 Spring 的事务绑定了同一个 `SqlSession`
+
+
+
+### ②.二级缓存
+
+- **跨 SqlSession**
+- 作用范围：**Mapper 命名空间**
+- 默认关闭，需要显式开启
+
+#### 如何开启
+
+① 全局开启（mybatis-config.xml）
+
+```xml
+<settings>
+    <setting name="cacheEnabled" value="true"/>
+</settings>
+```
+
+
+② Mapper 中开启
+
+```xml
+<mapper namespace="com.xxx.UserMapper">
+    <cache/>
+</mapper>
+```
+
+两步缺一不可。
+
+#### 使用示例
+
+~~~java
+User u1 = mapper1.getById(1);
+session1.close();
+
+User u2 = mapper2.getById(1); // 走二级缓存
+~~~
+
+#### 前提条件
+
+- 实现：`org.apache.ibatis.cache.Cache`
+- 默认实现：`PerpetualCache + LRU`
+- **数据是序列化存储的**
+
+**返回对象必须实现 `Serializable`**
+
+#### 缓存失效
+
+**任意一次写操作都会清空该 Mapper 的缓存：**
+
+```
+insert / update / delete
+```
+
+甚至：
+
+```
+update t_user set name = 'x'
+```
+
+会清空 **整个 UserMapper 的二级缓存**。
+
+#### 精细控制
+
+~~~xml
+<select id="getById" useCache="true"/>
+<update id="updateUser" flushCache="true"/>
+~~~
+
+| 属性         | 作用             |
+| ------------ | ---------------- |
+| `useCache`   | 是否使用二级缓存 |
+| `flushCache` | 是否清空缓存     |
+
+### ③.最佳实践
+
+一级缓存 **默认使用，不操心**
+二级缓存 **慎用**，只适合：
+
+- 读多写少
+- 数据稳定
+- 单表 Mapper
+
+而核心业务，采用Redis / Caffeine 等业务缓存更可靠
+
+> 一级缓存是“会话级别的免费性能优化”，
+>
+> 二级缓存是“Mapper 级别的可选能力，但风险较高”。
+
+
+
+## 8.存储过程
+

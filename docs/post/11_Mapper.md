@@ -1839,3 +1839,129 @@ update t_user set name = 'x'
 
 ## 8.存储过程
 
+**存储过程**：预先编译、存放在数据库中的一段 SQL 逻辑，可以接收参数、返回结果集或输出参数。
+
+MyBatis 调用存储过程时，必须注意三件事：
+
+1. **statementType="CALLABLE"**
+2. **参数必须显式声明 mode（IN / OUT / INOUT）**
+3. **返回结果要么是 resultType / resultMap，要么是 OUT 参数**
+
+### ①.IN参数
+
+~~~sql
+CREATE PROCEDURE delete_user(IN uid BIGINT)
+BEGIN
+    DELETE FROM t_user WHERE id = uid;
+END;
+~~~
+
+~~~java
+void deleteUser(Long id);
+~~~
+
+~~~xml
+<delete id="deleteUser" statementType="CALLABLE">
+    { call delete_user( #{id} ) }
+</delete>
+~~~
+
+~~~java
+userMapper.deleteUser(2L);
+~~~
+
+### ②.OUT参数
+
+~~~sql
+CREATE PROCEDURE get_user_count(OUT total INT)
+BEGIN
+    SELECT COUNT(*) INTO total FROM t_user;
+END;
+~~~
+
+~~~java
+void getUserCount(Map<String, Object> params);
+~~~
+
+~~~xml
+<select id="getUserCount" statementType="CALLABLE">
+    { call get_user_count( #{total, mode=OUT, jdbcType=INTEGER} ) }
+</select>
+~~~
+
+~~~java
+Map<String, Object> map = new HashMap<>();
+userMapper.getUserCount(map);
+Integer userCount = (Integer) map.get("total");
+logger.info(userCount);//1
+~~~
+
+### ③.IN+OUT参数组合
+
+~~~sql
+CREATE PROCEDURE count_user_by_sex(
+    IN p_sex INT,
+    OUT total INT
+)
+BEGIN
+    SELECT COUNT(*) INTO total
+    FROM t_user
+    WHERE sex = p_sex;
+END;
+~~~
+
+~~~java
+void countUserBySex(Map<String, Object> params);
+~~~
+
+~~~xml
+<select id="countUserBySex" statementType="CALLABLE">
+    { call count_user_by_sex(
+        #{p_sex, mode=IN, jdbcType=INTEGER},
+        #{total, mode=OUT,jdbcType=INTEGER}
+        ) }
+</select>
+~~~
+
+~~~java
+Map<String, Object> map2 = new HashMap<>();
+map2.put("p_sex", 1);
+userMapper.countUserBySex(map2);
+Integer total = (Integer) map2.get("total");
+logger.info(total);//1
+~~~
+
+### ④.返回结果集
+
+~~~sql
+CREATE PROCEDURE list_users()
+BEGIN
+    SELECT id, username, sex FROM t_user;
+END;
+~~~
+
+~~~java
+List<User> listUsers();
+~~~
+
+~~~xml
+<select id="listUsers" statementType="CALLABLE" resultType="com.learn.ssm.chapter5_sp.pojo.User">
+    { call list_users() }
+</select>
+~~~
+
+~~~java
+List<User> users = userMapper.listUsers();
+logger.info(users);//[User{id=1, username='Max}]
+~~~
+
+
+
+存储过程注意事项：
+
+1. statementType="CALLABLE"
+2. out参数要写jdbcType：`#{total, mode=OUT, jdbcType=INTEGER}`
+3. ...
+
+> MyBatis 调用存储过程的本质是 JDBC CallableStatement，
+> 用得好是性能工具，用不好是维护噩梦。

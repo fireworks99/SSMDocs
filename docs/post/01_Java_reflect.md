@@ -1,5 +1,5 @@
 ---
-title: Java反射技术
+title: 1️⃣Java反射技术
 lang: zh-CN
 author: fireworks99
 date: '2025-04-11'

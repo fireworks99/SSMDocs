@@ -52,7 +52,7 @@ export default defineUserConfig({
       "/post/12_JDBC_ORM",
 
 
-      "/post/13_Modifier"，
+      "/post/13_Modifier",
       "/post/14_Bean"
     ]
   }),

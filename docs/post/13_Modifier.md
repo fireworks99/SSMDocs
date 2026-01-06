@@ -57,14 +57,14 @@ Java编译器**不关心非访问修饰符的顺序**，只要语法正确就会
 
 ### Java语言规范
 
-```
+```java
 [访问修饰符] [static] [final] [transient] [volatile] 类型 变量名
 [访问修饰符] [static] [final] [abstract] [synchronized] [native] [strictfp] 返回类型 方法名
 ```
 
 ### 实际编码约定
 
-```
+```java
 // 变量：访问修饰符 -> static -> final -> transient/volatile -> 类型
 private static final transient Object obj;
 

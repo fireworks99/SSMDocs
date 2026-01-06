@@ -47,7 +47,8 @@ export default defineUserConfig({
       "/post/09_Mybatis_reflect",
       "/post/10_Mybatis_config",
       "/post/11_Mapper",
-      "/post/12_JDBC_ORM"
+      "/post/12_JDBC_ORM",
+      "/post/13_Modifier"
     ]
   }),
 

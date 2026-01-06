@@ -42,13 +42,18 @@ export default defineUserConfig({
       "/post/05_Observer",
       "/post/06_Factory",
       "/post/07_Builder",
+
+      
       "/post/08_Web_history",
       "/post/09_Mybatis_core",
       "/post/09_Mybatis_reflect",
       "/post/10_Mybatis_config",
       "/post/11_Mapper",
       "/post/12_JDBC_ORM",
-      "/post/13_Modifier"
+
+
+      "/post/13_Modifier"，
+      "/post/14_Bean"
     ]
   }),
 

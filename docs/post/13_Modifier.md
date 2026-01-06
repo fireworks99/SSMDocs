@@ -1,8 +1,8 @@
 ---
-title: 2-Java修饰符
+title: 3-Java修饰符
 lang: zh-CN
 author: fireworks99
-date: '2026-01-05'
+date: '2026-01-06'
 ---
 
 [[toc]]

@@ -22,4 +22,31 @@ SSM 是由 Spring MVC、Spring 和 MyBatis 组成的主流 Java Web 开发框架
 
 
 
+~~~
+  前端生态              vs         Java后端生态
+---------                        ------------
+JavaScript语言          →        Java语言 + JVM
+TypeScript (JS超集)     →        Kotlin (JVM语言)
+  ↓                                  ↓
+Vue/React/Angular       →        Spring Framework
+(UI框架/库)                      (企业级框架)
+  ↓                                  ↓
+Vue CLI/CRA             →        Spring Boot
+(项目脚手架)                     (项目快速启动器)
+  ↓                                  ↓
+Vite/Webpack            →        Maven/Gradle
+(构建工具)                       (构建工具)
+  ↓                                  ↓
+Axios                   →        Spring RestTemplate / WebClient
+(HTTP客户端)                     (HTTP客户端)
+  ↓                                  ↓
+Vue Router              →        Spring MVC
+(路由)                           (Web层)
+  ↓                                  ↓
+Pinia/Vuex              →        Spring Data / JPA
+(状态管理)                       (数据访问)
+~~~
+
+
+
 <SSMIntro />
